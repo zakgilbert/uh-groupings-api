@@ -31,6 +31,11 @@ import org.springframework.util.Assert;
 
 import edu.hawaii.its.api.access.UserBuilder;
 import edu.hawaii.its.api.access.UserDetailsServiceImpl;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @ComponentScan(basePackages = "edu.hawaii.its")
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
@@ -146,6 +151,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.addFilter(casAuthenticationFilter());
+        http.cors();
         http.exceptionHandling()
                 .authenticationEntryPoint(casProcessingFilterEntryPoint());
         http.authorizeRequests()
@@ -168,6 +174,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(casAuthenticationProvider());
+    }
+
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource()
+    {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
 }
