@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,6 +24,13 @@ public class HomeController {
     public String home(Map<String, Object> model, Locale locale) {
         logger.info("User at home. The client locale is " + locale);
         return "home";
+    }
+
+    @PreAuthorize("hasRole('ADMIN') || hasRole('OWNER')")
+    @RequestMapping(value = "/api/groupings/groupingAssignment", method = RequestMethod.GET)
+    public String groupings(Locale locale, Model model) {
+        logger.info("User at groupings.");
+        return "api/groupings/groupingAssignment";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
