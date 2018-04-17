@@ -26,6 +26,8 @@ import edu.hawaii.its.api.type.Grouping;
 import edu.hawaii.its.api.type.GroupingAssignment;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
 
+@CrossOrigin
+//@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping("/api/groupings")
 public class GroupingsRestController {
