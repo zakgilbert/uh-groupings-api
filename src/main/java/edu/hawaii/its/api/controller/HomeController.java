@@ -30,7 +30,7 @@ public class HomeController {
     @RequestMapping(value = "/api/groupings/groupingAssignment", method = RequestMethod.GET)
     public String groupings(Locale locale, Model model) {
         logger.info("User at groupings.");
-        return "api/groupings/groupingAssignment";
+        return "http://localhost:8081/uhgroupings/api/groupings/groupingAssignment";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
