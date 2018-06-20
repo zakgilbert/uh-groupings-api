@@ -144,6 +144,13 @@
             <version>2.3.0</version>
         </dependency>
 
+        <!--oauth-->
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-support-oauth-webflow</artifactId>
+            <version>${cas.version}</version>
+        </dependency>
+
         <!-- cas -->
         <dependency>
             <groupId>org.jasig.cas.client</groupId>
