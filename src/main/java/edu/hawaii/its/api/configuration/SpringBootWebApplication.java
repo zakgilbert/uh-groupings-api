@@ -12,7 +12,7 @@ import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
 
 @SpringBootApplication
-@EnableResourceServer
+//@EnableResourceServer
 public class SpringBootWebApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) throws Exception {
