@@ -22,6 +22,22 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 
+import edu.hawaii.its.api.type.Group;
+import edu.hawaii.its.api.type.GroupingsServiceResult;
+import edu.hawaii.its.api.type.Person;
+
+import edu.internet2.middleware.grouperClient.api.GcGroupSave;
+import edu.internet2.middleware.grouperClient.ws.StemScope;
+import edu.internet2.middleware.grouperClient.ws.beans.WsFindGroupsResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGetGroupsResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGroup;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGroupLookup;
+import edu.internet2.middleware.grouperClient.ws.beans.WsStemLookup;
+import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
+
+import edu.internet2.middleware.grouperClient.ws.beans.WsGroupToSave;
+
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,6 +85,8 @@ public class TestGroupingFactoryService {
 
     @Value("${grouperClient.webService.login}")
     private String APP_USER;
+
+    private String apple = "apple";
 
     @Autowired
     GroupAttributeService groupAttributeService;
@@ -205,5 +223,69 @@ public class TestGroupingFactoryService {
             sResults = gsre.getGsr();
             assertThat(sResults.getResultCode(), startsWith(FAILURE));
         }
+    }
+
+
+
+
+    // Methods below are for testing, to be deleted before pushing to master.
+    @Test
+    public void simpleTest() {
+        assertThat(apple, equalTo("apple"));
+    }
+
+    @Test
+    public void descriptionTest() {
+        WsFindGroupsResults clintGroupResult = grouperFactoryService.makeWsFindGroupsResults("hawaii.edu:custom:test:clintmor:clintmor-test");
+
+        // We only need the uuid from the (to be updated) group below (see if actual methods can
+        // just grab the uuid without creating this group instance...)
+        WsGroup clintGroup = clintGroupResult.getGroupResults()[0];
+
+        // To save an updated Group in Grouper, must do this...
+        WsGroup clint2 = new WsGroup();
+        clint2.setDescription("TEST TEST TEST Test grouping for clintmor");
+        clint2.setDisplayExtension("clintmor-test");
+        clint2.setName("hawaii.edu:custom:test:clintmor:clintmor-test");
+        clint2.setExtension("clintmor-test");
+
+        WsGroupToSave updatedGroup = new WsGroupToSave();
+        updatedGroup.setWsGroup(clint2);
+
+        WsGroupLookup groupLookup = new WsGroupLookup("hawaii.edu:custom:test:clintmor:clintmor-test", clintGroup.getUuid());
+        updatedGroup.setWsGroupLookup(groupLookup);
+
+        new GcGroupSave().addGroupToSave(updatedGroup).execute();
+    }
+
+    @Test
+    public void descriptionTest2() {
+        WsGroup clint3 = new WsGroup();
+        clint3.setDescription("Description Test 2: Test grouping for clintmor");
+
+        WsGroupLookup wsGL = new WsGroupLookup("hawaii.edu:custom:test:clintmor:clintmor-test",
+                grouperFactoryService.makeWsFindGroupsResults("hawaii.edu:custom:test:clintmor:clintmor-test")
+                .getGroupResults()[0].getUuid());
+
+        WsGroupToSave updatedGroup = new WsGroupToSave();
+        updatedGroup.setWsGroup(clint3);
+        updatedGroup.setWsGroupLookup(wsGL);
+
+        new GcGroupSave().addGroupToSave(updatedGroup).execute();
+    }
+
+    @Test
+    public void updateGroup2Test() {
+        String testString = "integration test Description";
+        String testPath = "hawaii.edu:custom:test:clintmor:clintmor-test";
+
+//        try {
+//
+//        } catch (GroupingsServiceResultException e) {
+//
+//        }
+
+        grouperFactoryService.updateGroup2(testPath, testString);
+        assertThat(grouperFactoryService.makeWsFindGroupsResults(testPath).getGroupResults()[0].getDescription(), equalTo(testString));
     }
 }

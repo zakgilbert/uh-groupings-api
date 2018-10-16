@@ -27,4 +27,7 @@ public interface GroupAttributeService {
     //do not include in REST controller
     public WsGetAttributeAssignmentsResults attributeAssignmentsResults(String assignType, String groupPath,
             String attributeName);
+
+    // NEW CLINT:
+    public GroupingsServiceResult updateDescription(String groupPath, String ownerUsername, String description);
 }

@@ -1,0 +1,13 @@
+POST /grouper-ws/servicesRest/v2_3_000/grouperPrivileges HTTP/1.1
+Connection: close
+Authorization: Basic xxxxxxxxxxxxxxxx
+User-Agent: Jakarta Commons-HttpClient/3.1
+Host: grouper-test.its.hawaii.edu:-1
+Content-Length: 219
+Content-Type: text/xml; charset=UTF-8
+
+<WsRestGetGrouperPrivilegesLiteRequest>
+  <subjectIdentifier>iamtst02</subjectIdentifier>
+  <groupName>tmp:zknoebel-test:zac-many:include</groupName>
+  <privilegeName>optin</privilegeName>
+</WsRestGetGrouperPrivilegesLiteRequest>

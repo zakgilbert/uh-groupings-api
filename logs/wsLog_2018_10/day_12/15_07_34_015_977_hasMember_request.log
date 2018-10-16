@@ -1,0 +1,18 @@
+POST /grouper-ws/servicesRest/v2_3_000/groups HTTP/1.1
+Connection: close
+Authorization: Basic xxxxxxxxxxxxxxxx
+User-Agent: Jakarta Commons-HttpClient/3.1
+Host: grouper-test.its.hawaii.edu:-1
+Content-Length: 252
+Content-Type: text/xml; charset=UTF-8
+
+<WsRestHasMemberRequest>
+  <wsGroupLookup>
+    <groupName>tmp:zknoebel-test:zac-many:include</groupName>
+  </wsGroupLookup>
+  <subjectLookups>
+    <WsSubjectLookup>
+      <subjectIdentifier>iamtst06</subjectIdentifier>
+    </WsSubjectLookup>
+  </subjectLookups>
+</WsRestHasMemberRequest>

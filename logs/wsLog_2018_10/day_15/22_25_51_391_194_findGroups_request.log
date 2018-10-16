@@ -1,0 +1,15 @@
+POST /grouper-ws/servicesRest/v2_3_000/groups HTTP/1.1
+Connection: close
+Authorization: Basic xxxxxxxxxxxxxxxx
+User-Agent: Jakarta Commons-HttpClient/3.1
+Host: grouper-test.its.hawaii.edu:-1
+Content-Length: 151
+Content-Type: text/xml; charset=UTF-8
+
+<WsRestFindGroupsRequest>
+  <wsGroupLookups>
+    <WsGroupLookup>
+      <groupName>tmp:test:test</groupName>
+    </WsGroupLookup>
+  </wsGroupLookups>
+</WsRestFindGroupsRequest>

@@ -714,4 +714,33 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
         return "GrouperFactoryServiceImpl";
     }
 
+
+    // NEW CLINT:
+    // Saves changes to a Group after its field values have been modified (in GroupAttributeService, ...):
+    public WsGroupSaveResults updateGroup(WsGroup updatedGroup, String groupPath, String uuid) {
+        WsGroupToSave groupToSave = new WsGroupToSave();
+        groupToSave.setWsGroup(updatedGroup);
+
+        WsGroupLookup groupLookup = new WsGroupLookup(groupPath, uuid);
+        groupToSave.setWsGroupLookup(groupLookup);
+
+        return new GcGroupSave().addGroupToSave(groupToSave).execute();
+    }
+
+    // NEW CLINT 2:
+    // Writes a new description into a WsGroup object, then sends this to updateGroup() for saving the change in Grouper.
+    public WsGroupSaveResults updateGroup2(String groupPath, String description) {
+        WsGroup updatedGroup = new WsGroup();
+        updatedGroup.setDescription(description);
+
+        WsGroupLookup groupLookup = new WsGroupLookup(groupPath,
+                makeWsFindGroupsResults(groupPath).getGroupResults()[0].getUuid());
+
+        WsGroupToSave groupToSave = new WsGroupToSave();
+        groupToSave.setWsGroup(updatedGroup);
+        groupToSave.setWsGroupLookup(groupLookup);
+
+        return new GcGroupSave().addGroupToSave(groupToSave).execute();
+    }
+
 }

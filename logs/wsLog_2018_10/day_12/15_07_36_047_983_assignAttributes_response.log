@@ -1,0 +1,105 @@
+HTTP/1.1 200 OK
+Server: Apache-Coyote/1.1
+Set-Cookie: JSESSIONID=xxxxxxxxxxxx; HttpOnly
+X-Grouper-resultCode: SUCCESS
+X-Grouper-success: T
+X-Grouper-resultCode2: NONE
+Content-Type: text/xml;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Sat, 13 Oct 2018 01:07:41 GMT
+Connection: close
+
+<WsAssignAttributesResults>
+  <wsAttributeDefs>
+    <WsAttributeDef>
+      <idIndex>10018</idIndex>
+      <extension>stdTimeString</extension>
+      <name>uh-settings:attributes:for-groups:last-modified:stdTimeString</name>
+      <uuid>a4ad5071098d4e2ab11d55667a037ab3</uuid>
+      <attributeDefType>attr</attributeDefType>
+      <multiAssignable>F</multiAssignable>
+      <multiValued>T</multiValued>
+      <valueType>string</valueType>
+    </WsAttributeDef>
+  </wsAttributeDefs>
+  <wsAttributeDefNames>
+    <WsAttributeDefName>
+      <idIndex>10109</idIndex>
+      <extension>yyyymmddThhmm</extension>
+      <displayExtension>yyyymmddThhmm</displayExtension>
+      <displayName>uh-settings:attributes:for-groups:last-modified:yyyymmddThhmm</displayName>
+      <name>uh-settings:attributes:for-groups:last-modified:yyyymmddThhmm</name>
+      <uuid>b98fabf989414acabc0cb1fccb5767ff</uuid>
+      <attributeDefId>a4ad5071098d4e2ab11d55667a037ab3</attributeDefId>
+      <attributeDefName>uh-settings:attributes:for-groups:last-modified:stdTimeString</attributeDefName>
+    </WsAttributeDefName>
+  </wsAttributeDefNames>
+  <wsAttributeAssignResults>
+    <WsAssignAttributeResult>
+      <wsAttributeAssignValueResults>
+        <WsAttributeAssignValueResult>
+          <changed>F</changed>
+          <deleted>F</deleted>
+          <wsAttributeAssignValue>
+            <id>55f7b7d57df04127a47ab84ce0668c80</id>
+            <valueSystem>20181012T1507</valueSystem>
+          </wsAttributeAssignValue>
+        </WsAttributeAssignValueResult>
+      </wsAttributeAssignValueResults>
+      <wsAttributeAssigns>
+        <WsAttributeAssign>
+          <disallowed>F</disallowed>
+          <attributeAssignActionType>immediate</attributeAssignActionType>
+          <attributeAssignDelegatable>FALSE</attributeAssignDelegatable>
+          <attributeAssignActionId>c399d3d81c75435499e233e0bf1ad9ae</attributeAssignActionId>
+          <attributeAssignActionName>assign</attributeAssignActionName>
+          <attributeAssignType>group</attributeAssignType>
+          <attributeDefNameId>b98fabf989414acabc0cb1fccb5767ff</attributeDefNameId>
+          <attributeDefNameName>uh-settings:attributes:for-groups:last-modified:yyyymmddThhmm</attributeDefNameName>
+          <attributeDefId>a4ad5071098d4e2ab11d55667a037ab3</attributeDefId>
+          <attributeDefName>uh-settings:attributes:for-groups:last-modified:stdTimeString</attributeDefName>
+          <wsAttributeAssignValues>
+            <WsAttributeAssignValue>
+              <id>55f7b7d57df04127a47ab84ce0668c80</id>
+              <valueSystem>20181012T1507</valueSystem>
+            </WsAttributeAssignValue>
+          </wsAttributeAssignValues>
+          <createdOn>2017/07/11 15:08:15.277</createdOn>
+          <enabled>T</enabled>
+          <id>20cb46ab6c3044bd950ed88dc7d38e55</id>
+          <lastUpdated>2017/07/11 15:08:15.277</lastUpdated>
+          <ownerGroupId>0582c9ee3cff4ba5af73a4dc84cb1926</ownerGroupId>
+          <ownerGroupName>tmp:zknoebel-test:zac-many</ownerGroupName>
+        </WsAttributeAssign>
+      </wsAttributeAssigns>
+      <changed>F</changed>
+      <valuesChanged>F</valuesChanged>
+      <deleted>F</deleted>
+    </WsAssignAttributeResult>
+  </wsAttributeAssignResults>
+  <resultMetadata>
+    <resultCode>SUCCESS</resultCode>
+    <resultMessage>, Found 1 results.  </resultMessage>
+    <success>T</success>
+  </resultMetadata>
+  <responseMetadata>
+    <resultWarnings>, Client version: 2.3.0 is less than (major/minor) server version: 2.2.2, Client version: 2.3.0 is less than (major/minor) server version: 2.2.2</resultWarnings>
+    <millis>10</millis>
+    <serverVersion>2.2.2</serverVersion>
+  </responseMetadata>
+  <wsGroups>
+    <WsGroup>
+      <extension>zac-many</extension>
+      <typeOfGroup>group</typeOfGroup>
+      <displayExtension>zac-many</displayExtension>
+      <description>Test Many Groups In Basis</description>
+      <displayName>tmp:zknoebel-test:zac-many</displayName>
+      <name>tmp:zknoebel-test:zac-many</name>
+      <uuid>0582c9ee3cff4ba5af73a4dc84cb1926</uuid>
+      <idIndex>828993</idIndex>
+    </WsGroup>
+  </wsGroups>
+  <wsStems/>
+  <wsMemberships/>
+  <wsSubjects/>
+</WsAssignAttributesResults>

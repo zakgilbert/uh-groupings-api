@@ -24,6 +24,7 @@ import edu.hawaii.its.api.type.Person;
 
 import edu.internet2.middleware.grouperClient.api.GcGetSubjects;
 import edu.internet2.middleware.grouperClient.api.GcGroupDelete;
+import edu.internet2.middleware.grouperClient.api.GcGroupSave;
 import edu.internet2.middleware.grouperClient.api.GcStemDelete;
 import edu.internet2.middleware.grouperClient.ws.StemScope;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
@@ -46,6 +47,7 @@ import edu.internet2.middleware.grouperClient.ws.beans.WsGroup;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGroupDeleteResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGroupLookup;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGroupSaveResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGroupToSave;
 import edu.internet2.middleware.grouperClient.ws.beans.WsHasMemberResult;
 import edu.internet2.middleware.grouperClient.ws.beans.WsHasMemberResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsMembership;
@@ -1226,5 +1228,30 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
             String attributeDefNameName,
             List<String> ownerGroupNames) {
         return null;
+    }
+
+    // NEW CLINT:
+    // Saves changes to a Group after its field values have been modified:
+    public WsGroupSaveResults updateGroup(WsGroup updatedGroup, String groupPath, String uuid) {
+        WsGroupToSave groupToSave = new WsGroupToSave();
+        groupToSave.setWsGroup(updatedGroup);
+
+        WsGroupLookup groupLookup = new WsGroupLookup(groupPath, updatedGroup.getUuid());
+        groupToSave.setWsGroupLookup(groupLookup);
+
+        return new GcGroupSave().addGroupToSave(groupToSave).execute();
+    }
+    public WsGroupSaveResults updateGroup2(String groupPath, String description) {
+        WsGroup updatedGroup = new WsGroup();
+        updatedGroup.setDescription(description);
+
+        WsGroupLookup groupLookup = new WsGroupLookup(groupPath,
+                makeWsFindGroupsResults(groupPath).getGroupResults()[0].getUuid());
+
+        WsGroupToSave groupToSave = new WsGroupToSave();
+        groupToSave.setWsGroup(updatedGroup);
+        groupToSave.setWsGroupLookup(groupLookup);
+
+        return new GcGroupSave().addGroupToSave(groupToSave).execute();
     }
 }

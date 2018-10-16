@@ -1,0 +1,28 @@
+POST /grouper-ws/servicesRest/v2_3_000/attributeAssignments HTTP/1.1
+Connection: close
+Authorization: Basic xxxxxxxxxxxxxxxx
+User-Agent: Jakarta Commons-HttpClient/3.1
+Host: grouper-test.its.hawaii.edu:-1
+Content-Length: 663
+Content-Type: text/xml; charset=UTF-8
+
+<WsRestAssignAttributesRequest>
+  <attributeAssignOperation>assign_attr</attributeAssignOperation>
+  <attributeAssignValueOperation>replace_values</attributeAssignValueOperation>
+  <values>
+    <WsAttributeAssignValue>
+      <valueSystem>20181012T1510</valueSystem>
+    </WsAttributeAssignValue>
+  </values>
+  <attributeAssignType>group</attributeAssignType>
+  <wsAttributeDefNameLookups>
+    <WsAttributeDefNameLookup>
+      <name>uh-settings:attributes:for-groups:last-modified:yyyymmddThhmm</name>
+    </WsAttributeDefNameLookup>
+  </wsAttributeDefNameLookups>
+  <wsOwnerGroupLookups>
+    <WsGroupLookup>
+      <groupName>tmp:zknoebel-test:zac-many</groupName>
+    </WsGroupLookup>
+  </wsOwnerGroupLookups>
+</WsRestAssignAttributesRequest>

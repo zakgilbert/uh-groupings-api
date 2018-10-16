@@ -1,0 +1,45 @@
+HTTP/1.1 201 Created
+Server: Apache-Coyote/1.1
+Set-Cookie: JSESSIONID=xxxxxxxxxxxx; HttpOnly
+X-Grouper-resultCode: SUCCESS
+X-Grouper-success: T
+X-Grouper-resultCode2: NONE
+Content-Type: text/xml;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Tue, 16 Oct 2018 08:03:24 GMT
+Connection: close
+
+<WsGroupSaveResults>
+  <results>
+    <WsGroupSaveResult>
+      <wsGroup>
+        <extension>clintmor-test</extension>
+        <typeOfGroup>group</typeOfGroup>
+        <displayExtension>clintmor-test</displayExtension>
+        <description>integration test Description</description>
+        <displayName>hawaii.edu:custom:test:clintmor:clintmor-test</displayName>
+        <name>hawaii.edu:custom:test:clintmor:clintmor-test</name>
+        <uuid>37267521e44244488872a60632e94ecd</uuid>
+        <idIndex>832345</idIndex>
+      </wsGroup>
+      <resultMetadata>
+        <resultCode>SUCCESS_UPDATED</resultCode>
+        <success>T</success>
+      </resultMetadata>
+    </WsGroupSaveResult>
+  </results>
+  <resultMetadata>
+    <resultCode>SUCCESS</resultCode>
+    <resultMessage>Success for: clientVersion: 2.3.0, wsGroupToSaves: Array size: 1: [0]: WsGroupToSave[
+  wsGroupLookup=WsGroupLookup[pitGroups=[],uuid=37267521e44244488872a60632e94ecd,groupName=hawaii.edu:custom:test:clintmor:clintmor-test],
+  wsGroup=WsGroup[descr...
+, actAsSubject: null, txType: NONE, paramNames: 
+, params: null</resultMessage>
+    <success>T</success>
+  </resultMetadata>
+  <responseMetadata>
+    <resultWarnings>, Client version: 2.3.0 is less than (major/minor) server version: 2.2.2, Client version: 2.3.0 is less than (major/minor) server version: 2.2.2</resultWarnings>
+    <millis>762</millis>
+    <serverVersion>2.2.2</serverVersion>
+  </responseMetadata>
+</WsGroupSaveResults>

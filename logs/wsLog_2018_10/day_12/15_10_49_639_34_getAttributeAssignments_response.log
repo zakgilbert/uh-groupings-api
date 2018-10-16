@@ -1,0 +1,83 @@
+HTTP/1.1 200 OK
+Server: Apache-Coyote/1.1
+Set-Cookie: JSESSIONID=xxxxxxxxxxxx; HttpOnly
+X-Grouper-resultCode: SUCCESS
+X-Grouper-success: T
+X-Grouper-resultCode2: NONE
+Content-Type: text/xml;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Sat, 13 Oct 2018 01:10:55 GMT
+Connection: close
+
+<WsGetAttributeAssignmentsResults>
+  <wsAttributeDefs>
+    <WsAttributeDef>
+      <idIndex>10022</idIndex>
+      <extension>checkboxes</extension>
+      <name>uh-settings:attributes:for-groups:uh-grouping:destinations:checkboxes</name>
+      <uuid>63c1665149da4a98b21e2a704b782c89</uuid>
+      <attributeDefType>attr</attributeDefType>
+      <multiAssignable>F</multiAssignable>
+      <multiValued>F</multiValued>
+      <valueType>marker</valueType>
+    </WsAttributeDef>
+  </wsAttributeDefs>
+  <wsAttributeDefNames>
+    <WsAttributeDefName>
+      <idIndex>10118</idIndex>
+      <extension>listserv</extension>
+      <displayExtension>listserv</displayExtension>
+      <description>Free-form description of listserv destination</description>
+      <displayName>uh-settings:attributes:for-groups:uh-grouping:destinations:listserv</displayName>
+      <name>uh-settings:attributes:for-groups:uh-grouping:destinations:listserv</name>
+      <uuid>f0dc37e52c65475481cede0eecd7d2ad</uuid>
+      <attributeDefId>63c1665149da4a98b21e2a704b782c89</attributeDefId>
+      <attributeDefName>uh-settings:attributes:for-groups:uh-grouping:destinations:checkboxes</attributeDefName>
+    </WsAttributeDefName>
+  </wsAttributeDefNames>
+  <wsAttributeAssigns>
+    <WsAttributeAssign>
+      <disallowed>F</disallowed>
+      <attributeAssignActionType>immediate</attributeAssignActionType>
+      <attributeAssignDelegatable>FALSE</attributeAssignDelegatable>
+      <attributeAssignActionId>afc2ecb0545543398218a1d18e4485bb</attributeAssignActionId>
+      <attributeAssignActionName>assign</attributeAssignActionName>
+      <attributeAssignType>group</attributeAssignType>
+      <attributeDefNameId>f0dc37e52c65475481cede0eecd7d2ad</attributeDefNameId>
+      <attributeDefNameName>uh-settings:attributes:for-groups:uh-grouping:destinations:listserv</attributeDefNameName>
+      <attributeDefId>63c1665149da4a98b21e2a704b782c89</attributeDefId>
+      <attributeDefName>uh-settings:attributes:for-groups:uh-grouping:destinations:checkboxes</attributeDefName>
+      <createdOn>2018/10/12 15:10:53.999</createdOn>
+      <enabled>T</enabled>
+      <id>5ff017e392e04cd6a72f0d35727f36ca</id>
+      <lastUpdated>2018/10/12 15:10:53.999</lastUpdated>
+      <ownerGroupId>0582c9ee3cff4ba5af73a4dc84cb1926</ownerGroupId>
+      <ownerGroupName>tmp:zknoebel-test:zac-many</ownerGroupName>
+    </WsAttributeAssign>
+  </wsAttributeAssigns>
+  <resultMetadata>
+    <resultCode>SUCCESS</resultCode>
+    <resultMessage>, Found 1 results.  </resultMessage>
+    <success>T</success>
+  </resultMetadata>
+  <responseMetadata>
+    <resultWarnings>, Client version: 2.3.0 is less than (major/minor) server version: 2.2.2, Client version: 2.3.0 is less than (major/minor) server version: 2.2.2</resultWarnings>
+    <millis>9</millis>
+    <serverVersion>2.2.2</serverVersion>
+  </responseMetadata>
+  <wsGroups>
+    <WsGroup>
+      <extension>zac-many</extension>
+      <typeOfGroup>group</typeOfGroup>
+      <displayExtension>zac-many</displayExtension>
+      <description>Test Many Groups In Basis</description>
+      <displayName>tmp:zknoebel-test:zac-many</displayName>
+      <name>tmp:zknoebel-test:zac-many</name>
+      <uuid>0582c9ee3cff4ba5af73a4dc84cb1926</uuid>
+      <idIndex>828993</idIndex>
+    </WsGroup>
+  </wsGroups>
+  <wsStems/>
+  <wsMemberships/>
+  <wsSubjects/>
+</WsGetAttributeAssignmentsResults>

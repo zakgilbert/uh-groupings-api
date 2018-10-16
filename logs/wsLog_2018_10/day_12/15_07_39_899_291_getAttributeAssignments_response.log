@@ -1,0 +1,62 @@
+HTTP/1.1 200 OK
+Server: Apache-Coyote/1.1
+Set-Cookie: JSESSIONID=xxxxxxxxxxxx; HttpOnly
+X-Grouper-resultCode: SUCCESS
+X-Grouper-success: T
+X-Grouper-resultCode2: NONE
+Content-Type: text/xml;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Sat, 13 Oct 2018 01:07:45 GMT
+Connection: close
+
+<WsGetAttributeAssignmentsResults>
+  <wsAttributeDefs>
+    <WsAttributeDef>
+      <idIndex>10021</idIndex>
+      <extension>checkboxes</extension>
+      <name>uh-settings:attributes:for-groups:uh-grouping:anyone-can:checkboxes</name>
+      <uuid>c00c8544d5cf419ab3ff8e6c94f44209</uuid>
+      <attributeDefType>attr</attributeDefType>
+      <multiAssignable>F</multiAssignable>
+      <multiValued>F</multiValued>
+      <valueType>marker</valueType>
+    </WsAttributeDef>
+  </wsAttributeDefs>
+  <wsAttributeDefNames>
+    <WsAttributeDefName>
+      <idIndex>10114</idIndex>
+      <extension>opt-in</extension>
+      <displayExtension>opt-in</displayExtension>
+      <displayName>uh-settings:attributes:for-groups:uh-grouping:anyone-can:opt-in</displayName>
+      <name>uh-settings:attributes:for-groups:uh-grouping:anyone-can:opt-in</name>
+      <uuid>7f56d32b05c64237bd285abda24d4187</uuid>
+      <attributeDefId>c00c8544d5cf419ab3ff8e6c94f44209</attributeDefId>
+      <attributeDefName>uh-settings:attributes:for-groups:uh-grouping:anyone-can:checkboxes</attributeDefName>
+    </WsAttributeDefName>
+  </wsAttributeDefNames>
+  <resultMetadata>
+    <resultCode>SUCCESS</resultCode>
+    <resultMessage>, Found 0 results.  </resultMessage>
+    <success>T</success>
+  </resultMetadata>
+  <responseMetadata>
+    <resultWarnings>, Client version: 2.3.0 is less than (major/minor) server version: 2.2.2, Client version: 2.3.0 is less than (major/minor) server version: 2.2.2</resultWarnings>
+    <millis>5</millis>
+    <serverVersion>2.2.2</serverVersion>
+  </responseMetadata>
+  <wsGroups>
+    <WsGroup>
+      <extension>zac-many</extension>
+      <typeOfGroup>group</typeOfGroup>
+      <displayExtension>zac-many</displayExtension>
+      <description>Test Many Groups In Basis</description>
+      <displayName>tmp:zknoebel-test:zac-many</displayName>
+      <name>tmp:zknoebel-test:zac-many</name>
+      <uuid>0582c9ee3cff4ba5af73a4dc84cb1926</uuid>
+      <idIndex>828993</idIndex>
+    </WsGroup>
+  </wsGroups>
+  <wsStems/>
+  <wsMemberships/>
+  <wsSubjects/>
+</WsGetAttributeAssignmentsResults>

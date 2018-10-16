@@ -1,0 +1,54 @@
+HTTP/1.1 200 OK
+Server: Apache-Coyote/1.1
+Set-Cookie: JSESSIONID=xxxxxxxxxxxx; HttpOnly
+X-Grouper-resultCode: SUCCESS_ALLOWED
+X-Grouper-success: T
+X-Grouper-resultCode2: NONE
+Content-Type: text/xml;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Sat, 13 Oct 2018 01:07:38 GMT
+Connection: close
+
+<WsGetGrouperPrivilegesLiteResult>
+  <resultMetadata>
+    <resultCode>SUCCESS_ALLOWED</resultCode>
+    <success>T</success>
+  </resultMetadata>
+  <privilegeResults>
+    <WsGrouperPrivilegeResult>
+      <allowed>T</allowed>
+      <ownerSubject>
+        <resultCode>SUCCESS</resultCode>
+        <success>T</success>
+        <id>GrouperAll</id>
+        <name>EveryEntity</name>
+        <sourceId>g:isa</sourceId>
+      </ownerSubject>
+      <privilegeName>optin</privilegeName>
+      <privilegeType>access</privilegeType>
+      <revokable>F</revokable>
+      <wsGroup>
+        <extension>exclude</extension>
+        <typeOfGroup>group</typeOfGroup>
+        <displayExtension>exclude</displayExtension>
+        <displayName>tmp:zknoebel-test:zac-many:exclude</displayName>
+        <name>tmp:zknoebel-test:zac-many:exclude</name>
+        <uuid>af1156c2a7a445259b850dd99ca6acc5</uuid>
+        <idIndex>828991</idIndex>
+      </wsGroup>
+      <wsSubject>
+        <identifierLookup>iamtst02</identifierLookup>
+        <resultCode>SUCCESS</resultCode>
+        <success>T</success>
+        <id>iamtst02</id>
+        <name>tst02name</name>
+        <sourceId>UH core LDAP</sourceId>
+      </wsSubject>
+    </WsGrouperPrivilegeResult>
+  </privilegeResults>
+  <responseMetadata>
+    <resultWarnings>, Client version: 2.3.0 is less than (major/minor) server version: 2.2.2, Client version: 2.3.0 is less than (major/minor) server version: 2.2.2</resultWarnings>
+    <millis>8</millis>
+    <serverVersion>2.2.2</serverVersion>
+  </responseMetadata>
+</WsGetGrouperPrivilegesLiteResult>

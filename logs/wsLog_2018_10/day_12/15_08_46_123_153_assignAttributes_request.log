@@ -1,0 +1,22 @@
+POST /grouper-ws/servicesRest/v2_3_000/attributeAssignments HTTP/1.1
+Connection: close
+Authorization: Basic xxxxxxxxxxxxxxxx
+User-Agent: Jakarta Commons-HttpClient/3.1
+Host: grouper-test.its.hawaii.edu:-1
+Content-Length: 486
+Content-Type: text/xml; charset=UTF-8
+
+<WsRestAssignAttributesRequest>
+  <attributeAssignOperation>remove_attr</attributeAssignOperation>
+  <attributeAssignType>group</attributeAssignType>
+  <wsAttributeDefNameLookups>
+    <WsAttributeDefNameLookup>
+      <name>uh-settings:attributes:for-groups:uh-grouping:destinations:listserv</name>
+    </WsAttributeDefNameLookup>
+  </wsAttributeDefNameLookups>
+  <wsOwnerGroupLookups>
+    <WsGroupLookup>
+      <groupName>tmp:zknoebel-test:zac-many</groupName>
+    </WsGroupLookup>
+  </wsOwnerGroupLookups>
+</WsRestAssignAttributesRequest>

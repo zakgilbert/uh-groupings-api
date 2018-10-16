@@ -1,0 +1,52 @@
+HTTP/1.1 200 OK
+Server: Apache-Coyote/1.1
+Set-Cookie: JSESSIONID=xxxxxxxxxxxx; HttpOnly
+X-Grouper-resultCode: SUCCESS
+X-Grouper-success: T
+X-Grouper-resultCode2: NONE
+Content-Type: text/xml;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Sat, 13 Oct 2018 01:10:55 GMT
+Connection: close
+
+<WsHasMemberResults>
+  <results>
+    <WsHasMemberResult>
+      <wsSubject>
+        <identifierLookup>iamtst01</identifierLookup>
+        <resultCode>SUCCESS</resultCode>
+        <success>T</success>
+        <id>iamtst01</id>
+        <name>tst01name</name>
+        <sourceId>UH core LDAP</sourceId>
+      </wsSubject>
+      <resultMetadata>
+        <resultCode>IS_MEMBER</resultCode>
+        <success>T</success>
+      </resultMetadata>
+    </WsHasMemberResult>
+  </results>
+  <wsGroup>
+    <extension>owners</extension>
+    <typeOfGroup>group</typeOfGroup>
+    <displayExtension>owners</displayExtension>
+    <displayName>tmp:zknoebel-test:zac-many:owners</displayName>
+    <name>tmp:zknoebel-test:zac-many:owners</name>
+    <uuid>ea551efe6c51452da3205a219d0dcebb</uuid>
+    <idIndex>828994</idIndex>
+  </wsGroup>
+  <resultMetadata>
+    <resultCode>SUCCESS</resultCode>
+    <resultMessage>Success for: clientVersion: 2.3.0, wsGroupLookup: WsGroupLookup[pitGroups=[],groupName=tmp:zknoebel-test:zac-many:owners], subjectLookups: Array size: 1: [0]: WsSubjectLookup[subjectIdentifier=iamtst01]
+
+ memberFilter: All, actAsSubject: null, fieldName: null, includeGroupDetail: false, includeSubjectDetail: false, subjectAttributeNames: null
+,params: null
+,pointInTimeFrom: null, pointInTimeTo: null</resultMessage>
+    <success>T</success>
+  </resultMetadata>
+  <responseMetadata>
+    <resultWarnings>, Client version: 2.3.0 is less than (major/minor) server version: 2.2.2, Client version: 2.3.0 is less than (major/minor) server version: 2.2.2</resultWarnings>
+    <millis>3</millis>
+    <serverVersion>2.2.2</serverVersion>
+  </responseMetadata>
+</WsHasMemberResults>

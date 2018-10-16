@@ -1,0 +1,21 @@
+POST /grouper-ws/servicesRest/v2_3_000/groups HTTP/1.1
+Connection: close
+Authorization: Basic xxxxxxxxxxxxxxxx
+User-Agent: Jakarta Commons-HttpClient/3.1
+Host: grouper-test.its.hawaii.edu:-1
+Content-Length: 349
+Content-Type: text/xml; charset=UTF-8
+
+<WsRestGroupSaveRequest>
+  <wsGroupToSaves>
+    <WsGroupToSave>
+      <wsGroupLookup>
+        <uuid>37267521e44244488872a60632e94ecd</uuid>
+        <groupName>hawaii.edu:custom:test:clintmor:clintmor-test</groupName>
+      </wsGroupLookup>
+      <wsGroup>
+        <description>Description Test 2: Test grouping for clintmor</description>
+      </wsGroup>
+    </WsGroupToSave>
+  </wsGroupToSaves>
+</WsRestGroupSaveRequest>
