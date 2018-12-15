@@ -14,6 +14,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
+// CLINT STUFF:
+import edu.internet2.middleware.grouperClient.ws.beans.WsFindGroupsResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGroup;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGroupToSave;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGroupLookup;
+import edu.internet2.middleware.grouperClient.api.GcGroupSave;
+import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
+
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
@@ -241,5 +249,60 @@ public class TestGroupingFactoryService {
             assertThat(gsre.getGsr().getResultCode(), startsWith(FAILURE));
         }
 
+    }
+
+    @Test
+    public void descriptionTest() {
+        WsFindGroupsResults clintGroupResult = grouperFactoryService.makeWsFindGroupsResults("hawaii.edu:custom:test:clintmor:clintmor-test");
+
+        // We only need the uuid from the (to be updated) group below (see if actual methods can
+        // just grab the uuid without creating this group instance...)
+        WsGroup clintGroup = clintGroupResult.getGroupResults()[0];
+
+        // To save an updated Group in Grouper, must do this...
+        WsGroup clint2 = new WsGroup();
+        clint2.setDescription("TEST TEST TEST Test grouping for clintmor");
+        clint2.setDisplayExtension("clintmor-test");
+        clint2.setName("hawaii.edu:custom:test:clintmor:clintmor-test");
+        clint2.setExtension("clintmor-test");
+
+        WsGroupToSave updatedGroup = new WsGroupToSave();
+        updatedGroup.setWsGroup(clint2);
+
+        WsGroupLookup groupLookup = new WsGroupLookup("hawaii.edu:custom:test:clintmor:clintmor-test", clintGroup.getUuid());
+        updatedGroup.setWsGroupLookup(groupLookup);
+
+        new GcGroupSave().addGroupToSave(updatedGroup).execute();
+    }
+
+    @Test
+    public void descriptionTest2() {
+        WsGroup clint3 = new WsGroup();
+        clint3.setDescription("Description Test 2: Test grouping for clintmor");
+
+        WsGroupLookup wsGL = new WsGroupLookup("hawaii.edu:custom:test:clintmor:clintmor-test",
+                grouperFactoryService.makeWsFindGroupsResults("hawaii.edu:custom:test:clintmor:clintmor-test")
+                        .getGroupResults()[0].getUuid());
+
+        WsGroupToSave updatedGroup = new WsGroupToSave();
+        updatedGroup.setWsGroup(clint3);
+        updatedGroup.setWsGroupLookup(wsGL);
+
+        new GcGroupSave().addGroupToSave(updatedGroup).execute();
+    }
+
+    @Test
+    public void updateGroup2Test() {
+        String testString = "Integration Test Description!!!";
+        String testPath = "hawaii.edu:custom:test:clintmor:clintmor-test";
+
+        //        try {
+        //
+        //        } catch (GroupingsServiceResultException e) {
+        //
+        //        }
+
+        grouperFactoryService.updateGroup(testPath, testString);
+        assertThat(grouperFactoryService.makeWsFindGroupsResults(testPath).getGroupResults()[0].getDescription(), equalTo(testString));
     }
 }

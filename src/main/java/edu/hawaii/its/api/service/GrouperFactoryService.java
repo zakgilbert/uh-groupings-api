@@ -176,4 +176,7 @@ public interface GrouperFactoryService {
 
     public WsGetSubjectsResults makeWsGetSubjectsResults(WsSubjectLookup lookup);
 
+    // CLINT STUFF:
+    public WsGroupSaveResults updateGroup(String groupPath, String description);
+
 }

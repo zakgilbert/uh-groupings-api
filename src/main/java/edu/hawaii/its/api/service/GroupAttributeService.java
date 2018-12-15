@@ -26,6 +26,9 @@ public interface GroupAttributeService {
 
     public boolean isGroupHasAttribute(String groupPath, String attribute);
 
+    // CLINT STUFF:
+    public GroupingsServiceResult updateDescription(String groupPath, String ownerUsername, String description);
+
     //do not include in REST controller
     public WsGetAttributeAssignmentsResults attributeAssignmentsResults(String assignType, String groupPath,
             String attributeName);

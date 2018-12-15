@@ -789,6 +789,22 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
         return new WsAttributeAssign[0];
     }
 
+    // CLINT STUFF:
+    // Writes a new description into a WsGroup object, then WsGroupToSave saves the change to Grouper.
+    public WsGroupSaveResults updateGroup(String groupPath, String description) {
+        WsGroup updatedGroup = new WsGroup();
+        updatedGroup.setDescription(description);
+
+        WsGroupLookup groupLookup = new WsGroupLookup(groupPath,
+                makeWsFindGroupsResults(groupPath).getGroupResults()[0].getUuid());
+
+        WsGroupToSave groupToSave = new WsGroupToSave();
+        groupToSave.setWsGroup(updatedGroup);
+        groupToSave.setWsGroupLookup(groupLookup);
+
+        return new GcGroupSave().addGroupToSave(groupToSave).execute();
+    }
+
     @Override
     public String toString() {
         return "GrouperFactoryServiceImpl";
