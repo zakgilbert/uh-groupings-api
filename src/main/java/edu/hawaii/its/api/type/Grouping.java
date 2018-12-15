@@ -44,6 +44,11 @@ public class Grouping {
     @Column
     private boolean isReleasedGroupingOn = false;
 
+    // CLINT STUFF:
+    @Column
+    private String description;
+    // CLINT STUFF
+
     // Constructor.
     public Grouping() {
         this("");
@@ -144,6 +149,12 @@ public class Grouping {
     public boolean isReleasedGroupingOn() { return isReleasedGroupingOn; }
 
     public void setReleasedGroupingOn(boolean isReleasedGroupingOn) { this.isReleasedGroupingOn = isReleasedGroupingOn; }
+
+    // CLINT STUFF:
+    public String getDescription() { return description; }
+
+    public void setDescription(String description) { this.description = description; }
+    // CLINT STUFF
 
     @Override
     public String toString() {

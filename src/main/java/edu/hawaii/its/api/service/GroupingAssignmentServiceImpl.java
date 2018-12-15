@@ -22,6 +22,7 @@ import edu.internet2.middleware.grouperClient.ws.beans.WsGroup;
 import edu.internet2.middleware.grouperClient.ws.beans.WsStemLookup;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubject;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
+import edu.internet2.middleware.grouperClient.ws.beans.WsFindGroupsResults;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -269,6 +270,14 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
             compositeGrouping.setInclude(include);
             compositeGrouping.setComposite(composite);
             compositeGrouping.setOwners(owners);
+
+
+            // CLINT STUFF:
+            WsFindGroupsResults resultsGroup = grouperFactoryService.makeWsFindGroupsResults(groupingPath);
+            WsGroup compositeGroup = resultsGroup.getGroupResults()[0];
+
+            compositeGrouping.setDescription(compositeGroup.getDescription());
+            // CLINT STUFF
 
         }
         return compositeGrouping;
