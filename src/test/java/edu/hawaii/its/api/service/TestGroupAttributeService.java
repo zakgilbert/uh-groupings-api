@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 
 @ActiveProfiles("integrationTest")
@@ -45,6 +46,12 @@ public class TestGroupAttributeService {
     @Value("${groupings.api.test.usernames}")
     private String[] username;
 
+    @Value("${groupings.api.test.admin_user}")
+    private String ADMIN;
+
+    @Value("${groupings.api.success}")
+    private String SUCCESS;
+
     @Value("${groupings.api.failure}")
     private String FAILURE;
 
@@ -62,6 +69,9 @@ public class TestGroupAttributeService {
 
     @Autowired
     private MemberAttributeService memberAttributeService;
+
+    @Autowired
+    private GrouperFactoryService grouperFactoryService;
 
     @Autowired
     public Environment env; // Just for the settings check.
@@ -96,6 +106,8 @@ public class TestGroupAttributeService {
 
         //remove from owners
         memberAttributeService.removeOwnership(GROUPING, username[0], username[1]);
+
+        groupAttributeService.updateDescription("hawaii.edu:custom:test:clintmor:clintmor-test", ADMIN, "");
     }
 
     @Test
@@ -318,5 +330,17 @@ public class TestGroupAttributeService {
         assertTrue(membershipService.isGroupCanOptOut(username[1], GROUPING_INCLUDE));
         assertTrue(membershipService.isGroupCanOptIn(username[1], GROUPING_EXCLUDE));
 
+    }
+
+    @Test
+    public void updateDescriptionTest() {
+
+        // Move strings to properties file
+        String path = "hawaii.edu:custom:test:clintmor:clintmor-test";
+        String description = "Test Description";
+
+        GroupingsServiceResult gsr = groupAttributeService.updateDescription(path, ADMIN, description);
+
+        assertThat(grouperFactoryService.makeWsFindGroupsResults(path).getGroupResults()[0].getDescription(), equalTo(description));
     }
 }
