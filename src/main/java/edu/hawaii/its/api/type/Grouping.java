@@ -45,8 +45,8 @@ public class Grouping {
     private boolean isReleasedGroupingOn = false;
 
     // CLINT STUFF:
-    @Column
-    private String description;
+//    @Column
+//    private String description;
     // CLINT STUFF
 
     // Constructor.
@@ -63,6 +63,7 @@ public class Grouping {
         setInclude(new EmptyGroup());
         setComposite(new EmptyGroup());
         setOwners(new EmptyGroup());
+//        setDescription("");
     }
 
     public String getName() {
@@ -151,9 +152,9 @@ public class Grouping {
     public void setReleasedGroupingOn(boolean isReleasedGroupingOn) { this.isReleasedGroupingOn = isReleasedGroupingOn; }
 
     // CLINT STUFF:
-    public String getDescription() { return description; }
-
-    public void setDescription(String description) { this.description = description; }
+//    public String getDescription() { return description; }
+//
+//    public void setDescription(String description) { this.description = description; }
     // CLINT STUFF
 
     @Override

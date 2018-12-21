@@ -279,7 +279,7 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
             WsFindGroupsResults resultsGroup = grouperFactoryService.makeWsFindGroupsResults(groupingPath);
             WsGroup compositeGroup = resultsGroup.getGroupResults()[0];
 
-            compositeGrouping.setDescription(compositeGroup.getDescription());
+//            compositeGrouping.setDescription(compositeGroup.getDescription());
             // CLINT STUFF
 
         }
