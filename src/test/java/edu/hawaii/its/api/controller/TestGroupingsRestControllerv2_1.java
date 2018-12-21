@@ -18,12 +18,16 @@ import edu.hawaii.its.api.type.GroupingsHTTPException;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
 import edu.hawaii.its.api.type.GroupingsServiceResultException;
 import edu.hawaii.its.api.type.MembershipAssignment;
+import edu.hawaii.its.api.type.Person;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hamcrest.core.IsEqual;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.thymeleaf.spring5.expression.Mvc;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,6 +43,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.PostConstruct;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -110,6 +115,9 @@ public class TestGroupingsRestControllerv2_1 {
 
     @Value("${groupings.api.test.grouping_true_empty_exclude}")
     private String GROUPING_TRUE_EMPTY_EXCLUDE;
+
+    @Value("${groupings.api.test.grouping_timeout_test}")
+    private String GROUPING_TIMEOUT;
 
     @Value("${groupings.api.basis}")
     private String BASIS;
@@ -1103,6 +1111,33 @@ public class TestGroupingsRestControllerv2_1 {
         }
     }
 
+    @Test
+    public void getGroupMembersTest() throws Exception {
+
+        Group group = mapGroup(GROUPING, "basis", adminUser);
+        assertThat(group.getMembers().size(), not(0));
+
+        try {
+            group = mapGroup(GROUPING_TIMEOUT, "basis", adminUser);
+            fail("Shouldn't be here.");
+        } catch (GroupingsHTTPException ghe) {
+            assertThat(ghe.getStatusCode(), equalTo(504));
+        }
+    }
+
+    @Test
+    public void searchMembersTest() throws Exception {
+
+        String path = GROUPING;
+        String componentId = "basis";
+        String uid = "iamtst04";
+
+        List<LinkedHashMap> searchResults = mapList(API_BASE + "/groupings/" + path + "/components/" + componentId + "/members/" + uid, "get", adminUser);
+        assertThat(searchResults.get(0).get("name"), IsEqual.equalTo("tst04name"));
+        assertThat(searchResults.get(0).get("username"), IsEqual.equalTo("iamtst04"));
+        assertThat(searchResults.get(0).get("uuid"), IsEqual.equalTo("iamtst04"));
+    }
+
     //todo v2.2 tests (right now these endpoints just throw UnsupportedOperationException, pointless to test)
 
     ///////////////////////////////////////////////////////////////////////
@@ -1187,6 +1222,26 @@ public class TestGroupingsRestControllerv2_1 {
 
         if (result.getResponse().getStatus() == 200) {
             return objectMapper.readValue(result.getResponse().getContentAsByteArray(), Grouping.class);
+        } else {
+            GroupingsHTTPException ghe = new GroupingsHTTPException();
+            throw new GroupingsHTTPException("URL call failed. Status code: " + result.getResponse().getStatus(),
+                    ghe, result.getResponse().getStatus());
+        }
+    }
+
+    // Mapping of getGroup call
+    private Group mapGroup(String parentGroupingPath, String componentId, User currentUser) throws Exception {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        MvcResult result = mockMvc.perform(get(API_BASE + "groupings/" + parentGroupingPath + "/components/" + componentId)
+                .header(CURRENT_USER, currentUser.getUsername())
+                .with(user(currentUser))
+                .with(csrf()))
+                .andReturn();
+
+        if (result.getResponse().getStatus() == 200) {
+            return objectMapper.readValue(result.getResponse().getContentAsByteArray(), Group.class);
         } else {
             GroupingsHTTPException ghe = new GroupingsHTTPException();
             throw new GroupingsHTTPException("URL call failed. Status code: " + result.getResponse().getStatus(),

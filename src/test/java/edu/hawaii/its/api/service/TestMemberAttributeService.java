@@ -53,6 +53,10 @@ public class TestMemberAttributeService {
     private String GROUPING_EXCLUDE;
     @Value("${groupings.api.test.grouping_many_owners}")
     private String GROUPING_OWNERS;
+
+    @Value("${groupings.api.test.grouping_timeout_test}")
+    private String GROUPING_TIMEOUT;
+
     @Value("${groupings.api.opt_in}")
     private String OPT_IN;
     @Value("${groupings.api.assign_type_immediate_membership}")
@@ -507,16 +511,22 @@ public class TestMemberAttributeService {
     }
 
     @Test
-    public void getMembersTest() {
+    public void searchMembersTest() {
 
         // iamtst04 is in the basis group
-        List<Person> members = memberAttributeService.getMembers(GROUPING_BASIS, username[3]);
+        List<Person> members = memberAttributeService.searchMembers(GROUPING_BASIS, username[3]);
         assertThat(members.get(0).getName(), equalTo("tst04name"));
         assertThat(members.get(0).getUsername(), equalTo("iamtst04"));
         assertThat(members.get(0).getUuid(), equalTo("iamtst04"));
 
         // iamtst01 is not in the basis group (results list should be empty)
-        members = memberAttributeService.getMembers(GROUPING_BASIS, username[0]);
+        members = memberAttributeService.searchMembers(GROUPING_BASIS, username[0]);
         assertThat(members.size(), equalTo(0));
+
+        // Should work with large basis groups too
+        members = memberAttributeService.searchMembers(GROUPING_TIMEOUT, "aaronvil");
+        assertThat(members.get(0).getName(), equalTo("Aaron Jhumar B Villanueva"));
+        assertThat(members.get(0).getUsername(), equalTo("aaronvil"));
+        assertThat(members.get(0).getUuid(), equalTo("21475256"));
     }
 }

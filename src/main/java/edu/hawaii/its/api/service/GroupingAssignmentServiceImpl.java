@@ -185,6 +185,9 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
     @Value("${groupings.api.person_attributes.composite_name}")
     private String COMPOSITE_NAME;
 
+    @Value("${groupings.api.timeout}")
+    private Integer TIMEOUT;
+
     public static final Log logger = LogFactory.getLog(GroupingAssignmentServiceImpl.class);
 
     @Autowired
@@ -486,10 +489,9 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
             Future<WsGetMembersResults> future = executor.submit(callable);
 
             try {
-                //todo Move to properties file
-                members = future.get(20, TimeUnit.SECONDS);
+                members = future.get(TIMEOUT, TimeUnit.SECONDS);
             } catch (TimeoutException te) {
-                te.printStackTrace();
+//                te.printStackTrace();
                 GroupingsHTTPException ghe = new GroupingsHTTPException();
                 throw new GroupingsHTTPException("getGroupMembers Operation Timed Out.", ghe, 504);
             }
