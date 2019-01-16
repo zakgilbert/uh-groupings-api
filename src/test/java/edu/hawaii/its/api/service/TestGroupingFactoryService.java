@@ -251,6 +251,11 @@ public class TestGroupingFactoryService {
 
     }
 
+    @Test
+    public void gettingDescTest() {
+        grouperFactoryService.descTest(APP_USER, "hawaii.edu:custom:test:zknoebel:zknoebel-test");
+    }
+
 //    @Test
 //    public void descriptionTest() {
 //        WsFindGroupsResults clintGroupResult = grouperFactoryService.makeWsFindGroupsResults("hawaii.edu:custom:test:clintmor:clintmor-test");

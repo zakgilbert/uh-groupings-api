@@ -115,6 +115,26 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
                 .execute();
     }
 
+    /*
+    Formalize after finishing. This is just for testing. Please remove from super class after removing here
+
+   Status: Not done
+
+     */
+
+    @Override
+    public void descTest(String username, String path) {
+        String descripGet = "";
+
+        WsSubjectLookup subject = makeWsSubjectLookup(username);
+
+        WsFindGroupsResults groups = makeWsFindGroupsResults(path);
+
+        System.out.println(groups.getGroupResults());
+
+        System.out.println(descripGet);
+    }
+
     @Override
     public WsGroupDeleteResults deleteGroup(WsSubjectLookup subjectLookup, WsGroupLookup path){
 
