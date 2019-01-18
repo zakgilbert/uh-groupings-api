@@ -3,6 +3,8 @@ package edu.hawaii.its.api.service;
 import edu.hawaii.its.api.configuration.SpringBootWebApplication;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
 import edu.hawaii.its.api.type.GroupingsServiceResultException;
+import edu.internet2.middleware.grouperClient.ws.StemScope;
+import edu.internet2.middleware.grouperClient.ws.beans.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,12 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
 // CLINT STUFF:
-import edu.internet2.middleware.grouperClient.ws.beans.WsFindGroupsResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGroup;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGroupToSave;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGroupLookup;
 import edu.internet2.middleware.grouperClient.api.GcGroupSave;
-import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -253,7 +250,8 @@ public class TestGroupingFactoryService {
 
     @Test
     public void gettingDescTest() {
-        grouperFactoryService.descTest(APP_USER, "hawaii.edu:custom:test:zknoebel:zknoebel-test");
+        WsFindGroupsResults wsFindGroupsResults = grouperFactoryService.makeWsFindGroupsResults("hawaii.edu:custom:test:kahlin:descTest");
+        System.out.print(wsFindGroupsResults.getGroupResults()[0].getDescription());
     }
 
 //    @Test

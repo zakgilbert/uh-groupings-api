@@ -238,16 +238,10 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
     }
 
     @Override
-    public void descTest(String username, String path) {
-        String descripGet = "";
-
-        WsSubjectLookup subject = makeWsSubjectLookup(username);
-
-        WsFindGroupsResults groups = makeWsFindGroupsResults(path);
-
-        System.out.println(groups.getGroupResults());
-
-        System.out.println(descripGet);
+    public WsGetGroupsResults descTest(
+                                       WsStemLookup stemLookup,
+                                       StemScope stemScope) {
+        return new WsGetGroupsResults();
     }
 
     @Override
