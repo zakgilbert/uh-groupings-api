@@ -117,34 +117,6 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
                 .execute();
     }
 
-    /*
-    Formalize after finishing. This is just for testing. Please remove from super class after removing here
-
-   Status: Not done
-
-     */
-
-    @Override
-    public WsGetGroupsResults descTest(
-            WsStemLookup stemLookup,
-            StemScope stemScope) {
-
-        return new GcGetGroups()
-                .assignWsStemLookup(stemLookup)
-                .assignStemScope(stemScope)
-                .assignIncludeGroupDetail(Boolean.TRUE)
-                .execute();
-
-//        String descripGet = "";
-//
-//        WsSubjectLookup subject = makeWsSubjectLookup(username);
-//
-//        WsFindGroupsResults groups = makeWsFindGroupsResults(path);
-//
-//        System.out.println(groups.getGroupResults());
-//
-//        System.out.println(descripGet);
-    }
 
     @Override
     public WsGroupDeleteResults deleteGroup(WsSubjectLookup subjectLookup, WsGroupLookup path) {

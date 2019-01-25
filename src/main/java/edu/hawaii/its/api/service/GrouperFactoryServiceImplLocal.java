@@ -238,13 +238,6 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
     }
 
     @Override
-    public WsGetGroupsResults descTest(
-                                       WsStemLookup stemLookup,
-                                       StemScope stemScope) {
-        return new WsGetGroupsResults();
-    }
-
-    @Override
     public WsStemDeleteResults deleteStem(WsSubjectLookup admin, WsStemLookup stem) {
 
         return new GcStemDelete()
