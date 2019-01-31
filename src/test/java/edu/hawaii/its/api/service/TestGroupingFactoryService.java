@@ -254,6 +254,18 @@ public class TestGroupingFactoryService {
         System.out.print(wsFindGroupsResults.getGroupResults()[0].getDescription());
     }
 
+    @Test
+    public void updateDescTest(){
+        WsFindGroupsResults wsFindGroupsResults = grouperFactoryService.makeWsFindGroupsResults("hawaii.edu:custom:test:kahlin:descTest");
+        System.out.print(wsFindGroupsResults.getGroupResults()[0].getDescription());
+
+        grouperFactoryService.updateGroup("hawaii.edu:custom:test:kahlin:descTest", "New description boyo");
+
+        WsFindGroupsResults wsFindGroupsResultsnumba2 = grouperFactoryService.makeWsFindGroupsResults("hawaii.edu:custom:test:kahlin:descTest");
+        System.out.print(wsFindGroupsResultsnumba2.getGroupResults()[0].getDescription());
+
+    }
+
 //    @Test
 //    public void descriptionTest() {
 //        WsFindGroupsResults clintGroupResult = grouperFactoryService.makeWsFindGroupsResults("hawaii.edu:custom:test:clintmor:clintmor-test");
