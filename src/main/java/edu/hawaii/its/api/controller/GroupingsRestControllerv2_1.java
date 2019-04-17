@@ -456,7 +456,7 @@ public class GroupingsRestControllerv2_1 {
     }
 
     /**
-     * Update grouping to add a new owner
+     * Update grouping to add a new owner.
      *
      * @param path: path of grouping to update
      * @param uid:  uid/uuid of new owner to add
