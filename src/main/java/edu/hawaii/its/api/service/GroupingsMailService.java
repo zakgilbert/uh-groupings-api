@@ -1,21 +1,20 @@
 package edu.hawaii.its.api.service;
 
 import com.opencsv.CSVWriter;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
-import edu.hawaii.its.api.type.Person;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.mail.MailParseException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import sun.java2d.pipe.SpanShapeRenderer;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +30,6 @@ class GroupingsMailService {
         this.javaMailSender = javaMailSender;
         this.res = res;
     }
-
 
     /**
      * Send a simple SMTP message from your machine to addr.
@@ -50,7 +48,8 @@ class GroupingsMailService {
         this.javaMailSender.send(message);
     }
 
-    void sendAttachmentMessage(String addr, String subject, String text, String path) throws MessagingException, IOException {
+    void sendAttachmentMessage(String addr, String subject, String text, String path)
+            throws MessagingException, IOException {
         File f = new File(path);
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
@@ -59,7 +58,6 @@ class GroupingsMailService {
             helper.setTo(addr);
             helper.setSubject(subject);
             helper.setText(text);
-
 
             FileSystemResource file = this.toCsv(this.toCsvObj(this.res), f);
 
@@ -86,13 +84,15 @@ class GroupingsMailService {
     private List<String[]> toCsvObj(List<List<GroupingsServiceResult>> res) {
         List<String[]> lines = new ArrayList<>();
 
-        lines.add(new String[]{"username", "uuid", "firstName", "lastName", "name"});
+        lines.add(new String[] { "username", "uuid", "firstName", "lastName", "name" });
 
+        /*
         for (List<GroupingsServiceResult> li : res) {
             for (GroupingsServiceResult item : li) {
                 lines.add(item.getPerson().toCsv());
             }
         }
+         */
         return lines;
     }
 
