@@ -182,6 +182,8 @@ public class MembershipServiceTest {
     // Delete user from include group to remove them
     // Use user number not slot in array
     // Use assert to check if it worked
+
+/*
     @Test
     public void deleteGroupingMemberByUhUuidTest() {
         Iterable<Grouping> group = groupingRepository.findAll();
@@ -233,6 +235,7 @@ public class MembershipServiceTest {
             gsr = gsre.getGsr();
         }
     }
+*/
 
     @Test
     public void addGroupingMemberbyUhUuidTest() {
@@ -360,6 +363,7 @@ public class MembershipServiceTest {
 
     }
 
+/*
     @Test
     public void addGroupMemberTest() {
 
@@ -377,6 +381,7 @@ public class MembershipServiceTest {
         assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
 
     }
+*/
 
     @Test
     public void addGroupMembersTest() {
@@ -667,6 +672,7 @@ public class MembershipServiceTest {
         //members in basis should not have been added to the include group ( + 2 for 'grouperAll' in both groups)
         assertEquals(usernames.size() - numberOfBasisMembers + 2, grouping.getInclude().getMembers().size());
     }
+/*
 
     @Test
     public void addMemberByUuidTest() {
@@ -678,10 +684,9 @@ public class MembershipServiceTest {
         grouping = groupingRepository.findByPath(GROUPING_1_PATH);
         assertTrue(grouping.getComposite().getMembers().contains(users.get(3)));
     }
-
     @Test
-    public void addMembersByUhUuid() {
-        //add all uuids
+    public void addMembersByUuid() {
+
         List<String> uuids = new ArrayList<>();
         for (Person user : users) {
             uuids.add(user.getUhUuid());
@@ -708,4 +713,5 @@ public class MembershipServiceTest {
         //members in basis should not have been added to the include group ( + 2 for 'grouperAll' in both groups)
         assertEquals(uuids.size() - numberOfBasisMembers + 2, grouping.getInclude().getMembers().size());
     }
+ */
 }

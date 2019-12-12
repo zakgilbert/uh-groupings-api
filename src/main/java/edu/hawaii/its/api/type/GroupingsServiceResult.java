@@ -1,16 +1,25 @@
 package edu.hawaii.its.api.type;
 
 public class GroupingsServiceResult {
-    private String action = "null";
-    private String resultCode = "null";
+    private String action;
+    private String resultCode;
+    private Person person;
 
     public GroupingsServiceResult() {
-        // Empty.
+        this.action = "null";
+        this.resultCode = "null";
+        this.person = null;
     }
 
     public GroupingsServiceResult(String resultCode, String action) {
         this.resultCode = resultCode;
         this.action = action;
+    }
+
+    public GroupingsServiceResult(String resultCode, String action, Person person) {
+        this.resultCode = resultCode;
+        this.action = action;
+        this.person = person;
     }
 
     public String getResultCode() {
@@ -27,6 +36,14 @@ public class GroupingsServiceResult {
 
     public void setAction(String action) {
         this.action = action;
+    }
+
+    public Person getPerson() {
+        return this.person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
     }
 
     @Override

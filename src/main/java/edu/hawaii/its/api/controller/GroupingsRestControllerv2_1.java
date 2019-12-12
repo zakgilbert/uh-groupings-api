@@ -336,7 +336,7 @@ public class GroupingsRestControllerv2_1 {
     path = path + INCLUDE;
     return ResponseEntity
         .ok()
-        .body(membershipService.addGroupMembers(currentUser, path, uids));
+        .body(membershipService.addGroupMembersByUsername(currentUser, path, uids));
   }
 
   /**
