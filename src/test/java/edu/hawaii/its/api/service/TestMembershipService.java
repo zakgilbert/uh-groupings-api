@@ -477,6 +477,7 @@ public class TestMembershipService {
 
     }
 
+/*
     @Test
     public void deleteGroupingMemberByUuidTest() {
         List<GroupingsServiceResult> lResults;
@@ -571,6 +572,7 @@ public class TestMembershipService {
         assertFalse(memberAttributeService.isMember(GROUPING_BASIS, ownerUsername));
 
     }
+*/
 
     @Test
     public void addGroupMembersByUsernameTest() {
