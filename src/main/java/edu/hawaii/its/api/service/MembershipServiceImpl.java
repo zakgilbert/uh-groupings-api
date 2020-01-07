@@ -333,8 +333,8 @@ public class MembershipServiceImpl implements MembershipService {
 
     //finds a user by a uuid and remove them from a grouping
     @Override
-    public List<GroupingsServiceResult> deleteGroupingMemberByUuid(String ownerUsername, String groupingPath,
-            String userToDeleteUuid) {
+    public List<GroupingsServiceResult> deleteGroupingMemberByUhUuid(String ownerUsername, String groupingPath,
+            String userToDeleteUhUuid) {
         logger.info("deleteGroupingMemberByUuid; ownerUsername: "
                 + ownerUsername
                 + "; groupingPath: "
@@ -374,11 +374,7 @@ public class MembershipServiceImpl implements MembershipService {
 
         //should not be in exclude if not in basis
         if (!isInBasis && isInExclude) {
-<<<<<<< HEAD
             gsrList.add(deleteGroupMemberByUsername(ownerUsername, exclude, userToDeleteUhUuid));
-=======
-            gsrList.add(deleteGroupMemberByUsername(ownerUsername, exclude, userToDeleteUuid));
->>>>>>> Implement response body for ui import request
         }
 
         return gsrList;
@@ -446,8 +442,8 @@ public class MembershipServiceImpl implements MembershipService {
         List<GroupingsServiceResult> result = null;
 
         personToAdd = new Person(null, null, userToAddUsername);
-        
-      return addMemberHelper(ownerUsername, groupPath, personToAdd);
+
+        return addMemberHelper(ownerUsername, groupPath, personToAdd);
     }
 
     //finds a user by a uuid and adds them to the group
