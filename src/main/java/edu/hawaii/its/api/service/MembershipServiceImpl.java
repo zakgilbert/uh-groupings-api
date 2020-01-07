@@ -331,6 +331,7 @@ public class MembershipServiceImpl implements MembershipService {
         return gsrList;
     }
 
+
     //finds a user by a uuid and remove them from a grouping
     @Override
     public List<GroupingsServiceResult> deleteGroupingMemberByUhUuid(String ownerUsername, String groupingPath,
