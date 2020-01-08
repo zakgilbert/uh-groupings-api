@@ -331,7 +331,6 @@ public class MembershipServiceImpl implements MembershipService {
         return gsrList;
     }
 
-
     //finds a user by a uuid and remove them from a grouping
     @Override
     public List<GroupingsServiceResult> deleteGroupingMemberByUhUuid(String ownerUsername, String groupingPath,
@@ -817,17 +816,9 @@ public class MembershipServiceImpl implements MembershipService {
             if (groupPath.endsWith(INCLUDE)) {
                 //if personToAdd is in exclude, get them out
                 if (memberAttributeService.isMember(exclude, personToAdd)) {
-                    WsDeleteMemberResults wsDeleteMemberResults = grouperFS.makeWsDeleteMemberResults(
-                            exclude,
-                            user,
-                            personToAdd);
-
+                    grouperFS.makeWsDeleteMemberResults(exclude, user, personToAdd);
                     isExcludeUpdated = true;
-
-                    gsrList.add(helperService.makeGroupingsServiceResult(wsDeleteMemberResults,
-                            "delete " + personToAdd.toString() + " from " + exclude));
                 }
-                //check to see if personToAdd is already in include
                 if (!memberAttributeService.isMember(include, personToAdd)) {
                     //add to include
                     WsAddMemberResults addMemberResults = grouperFS.makeWsAddMemberResults(include, user, personToAdd);
@@ -837,10 +828,6 @@ public class MembershipServiceImpl implements MembershipService {
                             memberAttributeService.getUserAttributes(username, personToAdd.getUsername()));
 
                     gsrList.add(helperService.makeGroupingsServiceResult(addMemberResults, action, personToAdd));
-                } else {
-                    //They are already in the group, so just return SUCCESS
-                    gsrList.add(helperService.makeGroupingsServiceResult(
-                            SUCCESS + ": " + personToAdd.toString() + " was already in " + groupPath, action));
                 }
             }
 
@@ -848,15 +835,13 @@ public class MembershipServiceImpl implements MembershipService {
             else if (groupPath.endsWith(EXCLUDE)) {
                 //if personToAdd is in include, get them out
                 if (memberAttributeService.isMember(include, personToAdd)) {
-                    WsDeleteMemberResults wsDeleteMemberResults = grouperFS.makeWsDeleteMemberResults(
+                    grouperFS.makeWsDeleteMemberResults(
                             include,
                             user,
                             personToAdd);
 
                     isIncludeUpdated = true;
 
-                    gsrList.add(helperService.makeGroupingsServiceResult(wsDeleteMemberResults,
-                            "delete " + personToAdd.toString() + " from " + include));
                 }
                 //check to see if userToAdd is already in exclude
                 if (!memberAttributeService.isMember(exclude, personToAdd)) {
@@ -865,14 +850,10 @@ public class MembershipServiceImpl implements MembershipService {
 
                     isExcludeUpdated = true;
 
-                    gsrList.add(helperService.makeGroupingsServiceResult(addMemberResults, action, personToAdd));
                     personToAdd.setAttributes(
                             memberAttributeService.getUserAttributes(username, personToAdd.getUsername()));
+                    gsrList.add(helperService.makeGroupingsServiceResult(addMemberResults, action, personToAdd));
                 }
-                //They are already in the group, so just return SUCCESS
-                gsrList.add(helperService.makeGroupingsServiceResult(
-                        SUCCESS + ": " + personToAdd.toString() + " was already in " + groupPath, action));
-
             }
             //if owners check to see if the user is already in owners
             else if (groupPath.endsWith(OWNERS)) {
