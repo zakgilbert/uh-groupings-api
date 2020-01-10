@@ -9,6 +9,7 @@ import edu.internet2.middleware.grouperClient.ws.GcWebServiceError;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAssignAttributesResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssignValue;
+import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeDefDeleteResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsDeleteMemberResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetGrouperPrivilegesLiteResult;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembershipsResults;
@@ -460,6 +461,26 @@ public class MembershipServiceImpl implements MembershipService {
     @Override
     public List<GroupingsServiceResult> addGroupMembersByUsername(String ownerUsername, String groupPath,
             List<String> usernamesToAdd) {
+        List<GroupingsServiceResult> gsrList = new ArrayList<>();
+        WsSubjectLookup user = grouperFS.makeWsSubjectLookup(ownerUsername);
+        String composite = helperService.parentGroupingPath(groupPath);
+
+        String group = "";
+        String fgroup = "";
+
+        if (groupPath.endsWith(INCLUDE)) {
+            group = composite + INCLUDE;
+            fgroup = composite + EXCLUDE;
+        } else if (groupPath.endsWith(EXCLUDE)) {
+            group = composite + EXCLUDE;
+            fgroup = composite + INCLUDE;
+        } else if (groupPath.endsWith(OWNERS)) {
+            group = composite + OWNERS;
+        }
+        grouperFS.makeWsDeleteMemberResults(fgroup, user, usernamesToAdd);
+        WsAddMemberResults addMemberResults = grouperFS.makeWsAddMemberResults(group, user, usernamesToAdd);
+        gsrList.add(helperService.makeGroupingsServiceResult(addMemberResults, "this is actually working", null));
+        /*
         logger.info(
                 "addGroupMembersByUsername; user: " + ownerUsername + "; group: " + groupPath + "; usersToAddUsername: "
                         + usernamesToAdd + ";");
@@ -477,6 +498,9 @@ public class MembershipServiceImpl implements MembershipService {
             }
         }
         return gsrList;
+       */
+        return gsrList;
+
     }
 
     //finds all the user from a list of uhUuids and adds them to the group
