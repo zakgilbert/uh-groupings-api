@@ -465,7 +465,16 @@ public class MembershipServiceImpl implements MembershipService {
                         + usernamesToAdd + ";");
         List<GroupingsServiceResult> gsrList = new ArrayList<>();
         for (String userToAdd : usernamesToAdd) {
-            gsrList.addAll(addGroupMemberByUsername(ownerUsername, groupPath, userToAdd));
+            try {
+                Integer.parseInt(userToAdd);
+                gsrList.addAll(addGroupMemberByUsername(ownerUsername, groupPath, userToAdd));
+            } catch (NumberFormatException ne) {
+                try {
+                    gsrList.addAll(addGroupMemberByUsername(ownerUsername, groupPath, userToAdd));
+                } catch (GcWebServiceError e) {
+
+                }
+            }
         }
         return gsrList;
     }
