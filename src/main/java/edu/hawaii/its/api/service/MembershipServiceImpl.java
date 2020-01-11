@@ -462,24 +462,33 @@ public class MembershipServiceImpl implements MembershipService {
     public List<GroupingsServiceResult> addGroupMembersByUsername(String ownerUsername, String groupPath,
             List<String> usernamesToAdd) {
         List<GroupingsServiceResult> gsrList = new ArrayList<>();
-        WsSubjectLookup user = grouperFS.makeWsSubjectLookup(ownerUsername);
-        String composite = helperService.parentGroupingPath(groupPath);
 
-        String group = "";
-        String fgroup = "";
+        if (memberAttributeService.isOwner(helperService.parentGroupingPath(groupPath), ownerUsername)
+                || memberAttributeService.isSuperuser(ownerUsername)) {
+            WsSubjectLookup user = grouperFS.makeWsSubjectLookup(ownerUsername);
+            String composite = helperService.parentGroupingPath(groupPath);
 
-        if (groupPath.endsWith(INCLUDE)) {
-            group = composite + INCLUDE;
-            fgroup = composite + EXCLUDE;
-        } else if (groupPath.endsWith(EXCLUDE)) {
-            group = composite + EXCLUDE;
-            fgroup = composite + INCLUDE;
-        } else if (groupPath.endsWith(OWNERS)) {
-            group = composite + OWNERS;
+            String group = "";
+            String fgroup = "";
+
+            if (groupPath.endsWith(INCLUDE)) {
+                group = composite + INCLUDE;
+                fgroup = composite + EXCLUDE;
+            } else if (groupPath.endsWith(EXCLUDE)) {
+                group = composite + EXCLUDE;
+                fgroup = composite + INCLUDE;
+            } else if (groupPath.endsWith(OWNERS)) {
+                group = composite + OWNERS;
+            }
+            WsDeleteMemberResults deleteMemberResults =
+                    grouperFS.makeWsDeleteMemberResults(fgroup, user, usernamesToAdd);
+            WsAddMemberResults addMemberResults = grouperFS.makeWsAddMemberResults(group, user, usernamesToAdd);
+            gsrList.add(helperService.makeGroupingsServiceResult(addMemberResults, "Add to " + group));
+            gsrList.add(helperService.makeGroupingsServiceResult(deleteMemberResults, "Delete from " + fgroup));
+
+        } else {
+            throw new AccessDeniedException(INSUFFICIENT_PRIVILEGES);
         }
-        grouperFS.makeWsDeleteMemberResults(fgroup, user, usernamesToAdd);
-        WsAddMemberResults addMemberResults = grouperFS.makeWsAddMemberResults(group, user, usernamesToAdd);
-        gsrList.add(helperService.makeGroupingsServiceResult(addMemberResults, "this is actually working", null));
         /*
         logger.info(
                 "addGroupMembersByUsername; user: " + ownerUsername + "; group: " + groupPath + "; usersToAddUsername: "
@@ -849,8 +858,9 @@ public class MembershipServiceImpl implements MembershipService {
             if (groupPath.endsWith(INCLUDE)) {
                 //if personToAdd is in exclude, get them out
                 if (memberAttributeService.isMember(exclude, personToAdd)) {
-                    grouperFS.makeWsDeleteMemberResults(exclude, user, personToAdd);
                     isExcludeUpdated = true;
+
+
                 }
                 if (!memberAttributeService.isMember(include, personToAdd)) {
                     //add to include
