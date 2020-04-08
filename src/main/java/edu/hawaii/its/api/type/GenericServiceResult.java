@@ -1,19 +1,21 @@
 package edu.hawaii.its.api.type;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Hydrate an object as you see fit. GenericServiceResult is a class which will build a collection of arbitrary objects.
+ * Hydrate an object as you see fit. GenericServiceResult is a class
+ * which will build a collection of arbitrary objects.
  */
 public class GenericServiceResult {
     // Storage of arbitrary objects.
-    ArrayList<Object> data;
+    List<Object> data;
     // Storage of names and indices of each objects added.
-    HashMap<String, Integer> map;
+    Map<String, Integer> map;
     int size;
 
     public GenericServiceResult() {
@@ -55,9 +57,7 @@ public class GenericServiceResult {
     public void add(List<String> keys, Object... objects) {
         Iterator<String> iter = keys.iterator();
         for (Object object : objects) {
-            this.map.put(iter.next(), this.size);
-            this.data.add(object);
-            this.size++;
+            this.add(iter.next(), object);
         }
     }
 
@@ -73,11 +73,11 @@ public class GenericServiceResult {
         this.size++;
     }
 
-    public ArrayList<Object> getData() {
-        return this.data;
+    public List<Object> getData() {
+        return Collections.unmodifiableList(this.data);
     }
 
-    public HashMap<String, Integer> getMap() {
-        return this.map;
+    public Map<String, Integer> getMap() {
+        return Collections.unmodifiableMap(this.map);
     }
 }
