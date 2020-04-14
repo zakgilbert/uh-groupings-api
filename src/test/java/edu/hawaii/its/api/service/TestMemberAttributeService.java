@@ -2,6 +2,8 @@ package edu.hawaii.its.api.service;
 
 import edu.hawaii.its.api.configuration.SpringBootWebApplication;
 import edu.hawaii.its.api.type.GenericServiceResult;
+import edu.hawaii.its.api.type.Group;
+import edu.hawaii.its.api.type.Grouping;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
 import edu.hawaii.its.api.type.Person;
 
@@ -28,6 +30,7 @@ import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -58,6 +61,8 @@ public class TestMemberAttributeService {
     private String GROUPING_TIMEOUT;
     @Value("${groupings.api.include}")
     private String INCLUDE;
+    @Value("${groupings.api.exclude")
+    private String EXCLUDE;
 
     @Value("${groupings.api.opt_in}")
     private String OPT_IN;
@@ -191,6 +196,57 @@ public class TestMemberAttributeService {
         //resNotOwner at index 0 is a GroupingsServiceResult.
         GroupingsServiceResult gsrNotValid = (GroupingsServiceResult) resNotValid.getData().get(0);
         assertEquals(FAILURE, gsrNotValid.getResultCode()); // Check Validity
+    }
+
+    @Test
+    public void checkAddMemberTest() {
+
+        // Check when adding to include and userToCheck is in exclude.
+        String userToCheck = usernames[3];
+        GenericServiceResult genericServiceResult =
+                memberAttributeService.checkAddMember(GROUPING, "include", ADMIN_USER, userToCheck);
+        assertTrue(((String) genericServiceResult.get("addPath")).endsWith("include"));
+        assertTrue((Boolean) genericServiceResult.get("add"));
+        assertTrue((Boolean) genericServiceResult.get("delete"));
+        assertTrue(((String) genericServiceResult.get("deletePath")).endsWith("exclude"));
+
+        // Check when adding to exclude and userToCheck is in exclude.
+        genericServiceResult = memberAttributeService.checkAddMember(GROUPING, "exclude", ADMIN_USER, userToCheck);
+        assertTrue(((String) genericServiceResult.get("addPath")).endsWith("exclude"));
+        assertFalse((Boolean) genericServiceResult.get("add"));
+        assertFalse((Boolean) genericServiceResult.get("delete"));
+        assertTrue(((String) genericServiceResult.get("deletePath")).endsWith("include"));
+
+        // Check when adding to exclude and userToCheck in include.
+        userToCheck = usernames[1];
+        genericServiceResult = memberAttributeService.checkAddMember(GROUPING, "exclude", ADMIN_USER, userToCheck);
+        assertTrue(((String) genericServiceResult.get("addPath")).endsWith("exclude"));
+        assertTrue((Boolean) genericServiceResult.get("add"));
+        assertTrue((Boolean) genericServiceResult.get("delete"));
+        assertTrue(((String) genericServiceResult.get("deletePath")).endsWith("include"));
+
+        // Check when adding to include and userToCheck is in include.
+        genericServiceResult = memberAttributeService.checkAddMember(GROUPING, "include", ADMIN_USER, userToCheck);
+        assertTrue(((String) genericServiceResult.get("addPath")).endsWith("include"));
+        assertFalse((Boolean) genericServiceResult.get("add"));
+        assertFalse((Boolean) genericServiceResult.get("delete"));
+        assertTrue(((String) genericServiceResult.get("deletePath")).endsWith("exclude"));
+
+        // Check when adding to owners and userToCheck is not in owners.
+        genericServiceResult = memberAttributeService.checkAddMember(GROUPING, "owners", ADMIN_USER, userToCheck);
+        assertTrue(((String) genericServiceResult.get("addPath")).endsWith("owners"));
+        assertNull(genericServiceResult.get("deletePath"));
+        assertTrue((Boolean) genericServiceResult.get("add"));
+        assertFalse((Boolean) genericServiceResult.get("delete"));
+
+        // Check when adding to owners and userToCheck is in owners.
+        userToCheck = usernames[0];
+        genericServiceResult = memberAttributeService.checkAddMember(GROUPING, "owners", ADMIN_USER, userToCheck);
+        assertTrue(((String) genericServiceResult.get("addPath")).endsWith("owners"));
+        assertNull(genericServiceResult.get("deletePath"));
+        assertFalse((Boolean) genericServiceResult.get("add"));
+        assertFalse((Boolean) genericServiceResult.get("delete"));
+
     }
 
     @Test

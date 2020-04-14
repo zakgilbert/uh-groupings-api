@@ -88,7 +88,7 @@ public class GenericServiceResult {
     public Object get(String key) {
         try {
             return getData().get(getKeys().get(key));
-        } catch (IndexOutOfBoundsException e) {
+        } catch (NullPointerException e) {
             throw new IndexOutOfBoundsException(e.getMessage());
         }
     }

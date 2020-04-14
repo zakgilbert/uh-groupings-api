@@ -683,6 +683,7 @@ public class TestMembershipService {
         assertFalse(memberAttributeService.isMember(GROUPING_BASIS, ownerUsername));
     }
 
+
     @Test
     @Ignore
     public void addGroupMemberTest() {
