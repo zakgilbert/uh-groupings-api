@@ -54,4 +54,6 @@ public interface MembershipService {
     GroupingsServiceResult removeSelfOpted(String groupPath, String username);
 
     GenericServiceResult generic();
+
+    GenericServiceResult addMember(String addPath, String delPath, String currentUser, String userToAdd);
 }

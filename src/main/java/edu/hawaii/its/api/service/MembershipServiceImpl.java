@@ -10,6 +10,7 @@ import edu.hawaii.its.api.type.Person;
 import edu.hawaii.its.api.util.Dates;
 
 import edu.internet2.middleware.grouperClient.ws.GcWebServiceError;
+import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResult;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAssignAttributesResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssignValue;
@@ -604,20 +605,27 @@ public class MembershipServiceImpl implements MembershipService {
         return genericServiceResult;
     }
 
-    /*
-public List<GroupingsServiceResult> add_Member_Helper(String username, String groupPath, Person personToAdd) {
-    logger.info(
-            "addMemberHelper; user: " + username + "; group: " + groupPath + "; personToAdd: " + personToAdd + ";");
-    List<GroupingsServiceResult> gsrList = new ArrayList<>();
+    @Override
+    public GenericServiceResult addMember(String addPath, String delPath, String currentUser, String userToAdd) {
+        if (!memberAttributeService.isSuperuser(currentUser) && !memberAttributeService.isAdmin(currentUser)) {
+            throw new AccessDeniedException(INSUFFICIENT_PRIVILEGES);
+        }
+        boolean delPathIsValid = !"null".equals(delPath);
+        WsSubjectLookup user = grouperFS.makeWsSubjectLookup(userToAdd);
+        GenericServiceResult genericServiceResult = new GenericServiceResult("addResult",
+                helperService.makeGroupingsServiceResult(
+                        grouperFS.makeWsAddMemberResults(addPath, user, createNewPerson(userToAdd)),
+                        "added: " + userToAdd + "; path: " + addPath));
+        if (delPathIsValid) {
+            genericServiceResult.add("deleteResult", helperService
+                    .makeGroupingsServiceResult(
+                            grouperFS.makeWsDeleteMemberResults(delPath, user, createNewPerson(userToAdd)),
+                            "deleted: " + userToAdd + "; path: " + delPath,
+                            null));
+        }
+        return genericServiceResult;
+    }
 
-    if (memberAttributeService.isOwner(helperService.parentGroupingPath(groupPath), username)
-            || memberAttributeService.isSuperuser(username) || (personToAdd.getUsername() != null && personToAdd
-            .getUsername().equals(username))) {
-        String pathToAdd;
-        String pathToDelete;
-    }
-    }
-     */
     //logic for adding a member
     public List<GroupingsServiceResult> addMemberHelper(String username, String groupPath, Person personToAdd) {
         logger.info(

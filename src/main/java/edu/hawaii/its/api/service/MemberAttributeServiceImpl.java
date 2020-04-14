@@ -552,34 +552,29 @@ public class MemberAttributeServiceImpl implements MemberAttributeService {
             String otherPath = "";
             boolean pathIsInclude = "include".equals(groupPath);
             boolean pathIsExclude = "exclude".equals(groupPath);
+            boolean pathIsOwners = "owners".equals(groupPath);
 
-            if (!pathIsExclude && !pathIsInclude) {
+            if (!pathIsExclude && !pathIsInclude && !pathIsOwners) {
                 return new GenericServiceResult("null", null);
+            }
+            if (pathIsOwners) {
+                otherPath = null;
             }
             if (pathIsInclude) {
                 otherPath = groupingPath + ":exclude";
-                groupingPath += ":" + groupPath;
             }
             if (pathIsExclude) {
                 otherPath = groupingPath + ":include";
-                groupingPath += ":" + groupPath;
             }
+            groupingPath += ":" + groupPath;
 
             boolean isMemberPath = isMember(groupingPath, userToCheck);
-            boolean isMemberOtherPath = isMember(otherPath, userToCheck);
+            boolean isMemberOtherPath = false;
+            if (null != otherPath)
+                isMemberOtherPath = isMember(otherPath, userToCheck);
 
-            if (isMemberPath) {
-                return new GenericServiceResult(Arrays.asList("add", "addPath", "delete", "deletePath"), false,
-                        null, false, null);
-            }
-            if (!isMemberPath && !isMemberOtherPath) {
-                return new GenericServiceResult(Arrays.asList("add", "addPath", "delete", "deletePath"), true,
-                        groupingPath, false, null);
-            }
-            if (!isMemberPath && isMemberOtherPath) {
-                return new GenericServiceResult(Arrays.asList("add", "addPath", "delete", "deletePath"), true,
-                        groupingPath, true, otherPath);
-            }
+            return new GenericServiceResult(Arrays.asList("add", "addPath", "delete", "deletePath"), !isMemberPath,
+                    groupingPath, isMemberOtherPath, otherPath);
         }
         throw new AccessDeniedException(INSUFFICIENT_PRIVILEGES);
     }
