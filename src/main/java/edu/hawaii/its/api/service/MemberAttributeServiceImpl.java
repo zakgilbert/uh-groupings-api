@@ -543,4 +543,44 @@ public class MemberAttributeServiceImpl implements MemberAttributeService {
         }
         throw new AccessDeniedException(INSUFFICIENT_PRIVILEGES);
     }
+
+    @Override
+    public GenericServiceResult checkAddMember(String groupingPath, String groupPath, String currentUser,
+            String userToCheck) {
+
+        if (isSuperuser(currentUser) || isAdmin(currentUser)) {
+            String otherPath = "";
+            boolean pathIsInclude = "include".equals(groupPath);
+            boolean pathIsExclude = "exclude".equals(groupPath);
+
+            if (!pathIsExclude && !pathIsInclude) {
+                return new GenericServiceResult("null", null);
+            }
+            if (pathIsInclude) {
+                otherPath = groupingPath + ":exclude";
+                groupingPath += ":" + groupPath;
+            }
+            if (pathIsExclude) {
+                otherPath = groupingPath + ":include";
+                groupingPath += ":" + groupPath;
+            }
+
+            boolean isMemberPath = isMember(groupingPath, userToCheck);
+            boolean isMemberOtherPath = isMember(otherPath, userToCheck);
+
+            if (isMemberPath) {
+                return new GenericServiceResult(Arrays.asList("add", "addPath", "delete", "deletePath"), false,
+                        null, false, null);
+            }
+            if (!isMemberPath && !isMemberOtherPath) {
+                return new GenericServiceResult(Arrays.asList("add", "addPath", "delete", "deletePath"), true,
+                        groupingPath, false, null);
+            }
+            if (!isMemberPath && isMemberOtherPath) {
+                return new GenericServiceResult(Arrays.asList("add", "addPath", "delete", "deletePath"), true,
+                        groupingPath, true, otherPath);
+            }
+        }
+        throw new AccessDeniedException(INSUFFICIENT_PRIVILEGES);
+    }
 }

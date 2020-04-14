@@ -33,6 +33,7 @@ import javax.mail.MessagingException;
 import java.io.IOException;
 import java.lang.instrument.Instrumentation;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -261,13 +262,12 @@ public class GroupingsRestControllerv2_1 {
                 .body(membershipService.addGroupMember(currentUser, path, uid));
     }
 
-    @PostMapping(value = "/groupings/{groupingPath:[\\w-:.]+}/grouping/{groupPath:[\\w-:.]+}/addMember/{userToAdd:[\\w-:.]+}")
-    public ResponseEntity<GenericServiceResult> addMember(@RequestHeader("current_user") String currentUser,
-            @PathVariable String groupingPath, @PathVariable String groupPath, @PathVariable String userToAdd) {
-        groupingPath += groupPath;
+    @PostMapping(value = "/groupings/{groupingPath:[\\w-:.]+}/grouping/{groupPath:[\\w-:.]+}/checkAddMember/{userToCheck:[\\w-:.]+}")
+    public ResponseEntity<GenericServiceResult> checkAddMember(@RequestHeader("current_user") String currentUser,
+            @PathVariable String groupingPath, @PathVariable String groupPath, @PathVariable String userToCheck) {
         return ResponseEntity
                 .ok()
-                .body(null);
+                .body(memberAttributeService.checkAddMember(groupingPath, groupPath, currentUser, userToCheck));
     }
 
     /**
@@ -278,6 +278,7 @@ public class GroupingsRestControllerv2_1 {
      * @return Information about results of the operation
      */
     @PutMapping(value = "/groupings/{path:[\\w-:.]+}/includeMultipleMembers/{uids}")
+
     public ResponseEntity<List<GroupingsServiceResult>> includeMultipleMembers(
             @RequestHeader("current_user") String currentUser, @PathVariable String path,
             @PathVariable List<String> uids) throws IOException, MessagingException {

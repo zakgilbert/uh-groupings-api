@@ -46,4 +46,6 @@ public interface MemberAttributeService {
     GenericServiceResult getIsOwner(String currentUser, String usernameInQuestion);
 
     GenericServiceResult getIsAdmin(String currentUser, String usernameInQuestion);
+
+    GenericServiceResult checkAddMember(String groupingPath, String GroupPath, String currentUser, String userToCheck);
 }
