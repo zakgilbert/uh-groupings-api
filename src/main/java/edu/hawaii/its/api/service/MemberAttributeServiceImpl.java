@@ -548,34 +548,58 @@ public class MemberAttributeServiceImpl implements MemberAttributeService {
     public GenericServiceResult checkAddMember(String groupingPath, String groupPath, String currentUser,
             String userToCheck) {
 
-        if (isSuperuser(currentUser) || isAdmin(currentUser)) {
-            String otherPath = "";
-            boolean pathIsInclude = "include".equals(groupPath);
-            boolean pathIsExclude = "exclude".equals(groupPath);
-            boolean pathIsOwners = "owners".equals(groupPath);
-
-            if (!pathIsExclude && !pathIsInclude && !pathIsOwners) {
-                return new GenericServiceResult("null", null);
-            }
-            if (pathIsOwners) {
-                otherPath = null;
-            }
-            if (pathIsInclude) {
-                otherPath = groupingPath + ":exclude";
-            }
-            if (pathIsExclude) {
-                otherPath = groupingPath + ":include";
-            }
-            groupingPath += ":" + groupPath;
-
-            boolean isMemberPath = isMember(groupingPath, userToCheck);
-            boolean isMemberOtherPath = false;
-            if (null != otherPath)
-                isMemberOtherPath = isMember(otherPath, userToCheck);
-
-            return new GenericServiceResult(Arrays.asList("add", "addPath", "delete", "deletePath"), !isMemberPath,
-                    groupingPath, isMemberOtherPath, otherPath);
+        if (!isSuperuser(currentUser) && !isAdmin(currentUser)) {
+            throw new AccessDeniedException(INSUFFICIENT_PRIVILEGES);
         }
-        throw new AccessDeniedException(INSUFFICIENT_PRIVILEGES);
+        String otherPath = "";
+        boolean pathIsInclude = "include".equals(groupPath);
+        boolean pathIsExclude = "exclude".equals(groupPath);
+        boolean pathIsOwners = "owners".equals(groupPath);
+        boolean userIsInvalid = !checkUsernameValidity(userToCheck);
+
+        if (userIsInvalid) {
+            return new GenericServiceResult(
+                    Arrays.asList("result", "userIsInvalid", "add", "addPath", "delete", "deletePath"),
+                    new GroupingsServiceResult(FAILURE,
+                            "checkAddMembers[ addPath: " + groupingPath + "; groupPath: " + groupPath
+                                    + "; userToCheck: "
+                                    + userToCheck + ";]"), true, false, null, false, null);
+        }
+        if (pathIsOwners) {
+            otherPath = null;
+        }
+        if (pathIsInclude) {
+            otherPath = groupingPath + ":exclude";
+        }
+        if (pathIsExclude) {
+            otherPath = groupingPath + ":include";
+        }
+        groupingPath += ":" + groupPath;
+
+        String action = "checkAddMembers[ addPath: " + groupingPath + "; deletePath: " + otherPath + "; userToCheck: "
+                + userToCheck + ";]";
+        boolean isMemberPath;
+        boolean isMemberOtherPath = false;
+        try {
+
+            isMemberPath = isMember(groupingPath, userToCheck);
+            if (null != otherPath) {
+                isMemberOtherPath = isMember(otherPath, userToCheck);
+            }
+            logger.info(action);
+            return new GenericServiceResult(
+                    Arrays.asList("result", "userIsInvalid", "add", "addPath", "delete", "deletePath"),
+                    new GroupingsServiceResult(SUCCESS, action), false, !isMemberPath,
+                    groupingPath, isMemberOtherPath, otherPath);
+        } catch (GcWebServiceError e) {
+            logger.warn(action, e);
+            throw new GcWebServiceError(e);
+        }
+    }
+
+    public boolean checkUsernameValidity(String userToCheck) {
+        WsSubjectLookup wsSubjectLookup = grouperFS.makeWsSubjectLookup(userToCheck);
+        WsGetSubjectsResults wsGetSubjectsResults = grouperFS.makeWsGetSubjectsResults(wsSubjectLookup);
+        return !("SUBJECT_NOT_FOUND".equals(wsGetSubjectsResults.getWsSubjects()[0].getResultCode()));
     }
 }

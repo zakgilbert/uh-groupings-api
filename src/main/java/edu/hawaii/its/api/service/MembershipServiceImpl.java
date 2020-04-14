@@ -198,9 +198,9 @@ public class MembershipServiceImpl implements MembershipService {
     }
 
     // Creates a Person depending on the input used. For example, if input is UhUuid, user will be created using that.
+    @Override
     public Person createNewPerson(String userToAdd) {
         Person createdPerson;
-
         try {
             Integer.parseInt(userToAdd);
             createdPerson = new Person(null, userToAdd, null, null, null);

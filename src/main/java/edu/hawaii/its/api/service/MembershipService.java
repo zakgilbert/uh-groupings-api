@@ -3,6 +3,7 @@ package edu.hawaii.its.api.service;
 import edu.hawaii.its.api.type.GenericServiceResult;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
 import edu.hawaii.its.api.type.Membership;
+import edu.hawaii.its.api.type.Person;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
@@ -56,4 +57,6 @@ public interface MembershipService {
     GenericServiceResult generic();
 
     GenericServiceResult addMember(String addPath, String delPath, String currentUser, String userToAdd);
+
+    Person createNewPerson(String userToAdd);
 }
