@@ -54,6 +54,12 @@ public class GroupingsRestControllerv2_1 {
     @Value("${groupings.api.include}")
     private String INCLUDE;
 
+    @Value(":owners")
+    private String OWNERS;
+
+    @Value("${groupings.api.basis}")
+    private String BASIS;
+
     @Value("${groupings.api.opt_in}")
     private String OPT_IN;
 
@@ -253,6 +259,15 @@ public class GroupingsRestControllerv2_1 {
         return ResponseEntity
                 .ok()
                 .body(membershipService.addGroupMember(currentUser, path, uid));
+    }
+
+    @PostMapping(value = "/groupings/{groupingPath:[\\w-:.]+}/grouping/{groupPath:[\\w-:.]+}/addMember/{userToAdd:[\\w-:.]+}")
+    public ResponseEntity<GenericServiceResult> addMember(@RequestHeader("current_user") String currentUser,
+            @PathVariable String groupingPath, @PathVariable String groupPath, @PathVariable String userToAdd) {
+        groupingPath += groupPath;
+        return ResponseEntity
+                .ok()
+                .body(null);
     }
 
     /**
