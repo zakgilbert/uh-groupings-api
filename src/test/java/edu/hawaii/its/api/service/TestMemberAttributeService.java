@@ -14,7 +14,9 @@ import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembershipsResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -198,11 +200,15 @@ public class TestMemberAttributeService {
         assertEquals(FAILURE, gsrNotValid.getResultCode()); // Check Validity
     }
 
+    @Rule
+    public final ExpectedException exception = ExpectedException.none();
+
     @Test
     public void checkAddMemberTest() {
         String include = "include";
         String exclude = "exclude";
         String owners = "owners";
+
         // Check when adding to include and userToCheck is in exclude.
         String userToCheck = usernames[3];
         GenericServiceResult genericServiceResult =
@@ -249,14 +255,19 @@ public class TestMemberAttributeService {
         assertFalse((Boolean) genericServiceResult.get("add"));
         assertFalse((Boolean) genericServiceResult.get("delete"));
 
-        // Check when adding an invalid user
+        // Check when userToCheck is invalid.
         userToCheck = "zzzzzz";
         genericServiceResult = memberAttributeService.checkAddMember(GROUPING, include, ADMIN_USER, userToCheck);
-        assertFalse((Boolean) genericServiceResult.get("add"));
-        assertFalse((Boolean) genericServiceResult.get("delete"));
-        assertNull(genericServiceResult.get("addPath"));
-        assertNull(genericServiceResult.get("deletePath"));
-        assertTrue((Boolean) genericServiceResult.get("userIsInvalid"));
+        assertEquals(FAILURE, ((GroupingsServiceResult) genericServiceResult.get("result")).getResultCode());
+
+        // Check when groupingPath is invalid.
+        userToCheck = usernames[0];
+        exception.expect(GcWebServiceError.class);
+        memberAttributeService.checkAddMember("zzzzzzz", include, ADMIN_USER, userToCheck);
+
+        // Check when currentUser is invalid.
+        exception.expect(AccessDeniedException.class);
+        memberAttributeService.checkAddMember(GROUPING, include, "zzzzz", userToCheck);
 
     }
 

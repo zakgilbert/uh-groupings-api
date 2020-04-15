@@ -551,48 +551,51 @@ public class MemberAttributeServiceImpl implements MemberAttributeService {
         if (!isSuperuser(currentUser) && !isAdmin(currentUser)) {
             throw new AccessDeniedException(INSUFFICIENT_PRIVILEGES);
         }
-        String otherPath = "";
-        boolean pathIsInclude = "include".equals(groupPath);
-        boolean pathIsExclude = "exclude".equals(groupPath);
-        boolean pathIsOwners = "owners".equals(groupPath);
-        boolean userIsInvalid = !checkUsernameValidity(userToCheck);
 
-        if (userIsInvalid) {
-            return new GenericServiceResult(
-                    Arrays.asList("result", "userIsInvalid", "add", "addPath", "delete", "deletePath"),
-                    new GroupingsServiceResult(FAILURE,
-                            "checkAddMembers[ addPath: " + groupingPath + "; groupPath: " + groupPath
-                                    + "; userToCheck: "
-                                    + userToCheck + ";]"), true, false, null, false, null);
+        if (!checkUsernameValidity(userToCheck)) {
+            return new GenericServiceResult("result",
+                    new GroupingsServiceResult(FAILURE, "The uid " + userToCheck + " is invalid"));
         }
-        if (pathIsOwners) {
-            otherPath = null;
-        }
-        if (pathIsInclude) {
-            otherPath = groupingPath + ":exclude";
-        }
-        if (pathIsExclude) {
-            otherPath = groupingPath + ":include";
+
+        String otherPath = "";
+        String action;
+        Person personToAdd;
+        boolean isMemberPath;
+        boolean isMemberOtherPath = false;
+
+        switch (groupPath) {
+            case "owners":
+                otherPath = null;
+                break;
+            case "include":
+                otherPath = groupingPath + ":exclude";
+                break;
+            case "exclude":
+                otherPath = groupingPath + ":include";
+                break;
         }
         groupingPath += ":" + groupPath;
 
-        String action = "checkAddMembers[ addPath: " + groupingPath + "; deletePath: " + otherPath + "; userToCheck: "
+        action = "checkAddMembers[ addPath: " + groupingPath + "; deletePath: " + otherPath + "; userToCheck: "
                 + userToCheck + ";]";
-        boolean isMemberPath;
-        boolean isMemberOtherPath = false;
         try {
-
             isMemberPath = isMember(groupingPath, userToCheck);
+
             if (null != otherPath) {
                 isMemberOtherPath = isMember(otherPath, userToCheck);
             }
+            personToAdd = membershipService.createNewPerson(userToCheck);
+            personToAdd.setAttributes(getUserAttributes(currentUser, userToCheck));
+
             logger.info(action);
+
             return new GenericServiceResult(
-                    Arrays.asList("result", "userIsInvalid", "add", "addPath", "delete", "deletePath"),
-                    new GroupingsServiceResult(SUCCESS, action), false, !isMemberPath,
+                    Arrays.asList("result", "add", "addPath", "delete", "deletePath"),
+                    new GroupingsServiceResult(SUCCESS, action, personToAdd), !isMemberPath,
                     groupingPath, isMemberOtherPath, otherPath);
         } catch (GcWebServiceError e) {
-            logger.warn(action, e);
+            // Path is invalid.
+            logger.error(action, e);
             throw new GcWebServiceError(e);
         }
     }

@@ -262,7 +262,7 @@ public class GroupingsRestControllerv2_1 {
                 .body(membershipService.addGroupMember(currentUser, path, uid));
     }
 
-    @PostMapping(value = "/groupings/{groupingPath:[\\w-:.]+}/grouping/{groupPath:[\\w-:.]+}/checkAddMember/{userToCheck:[\\w-:.]+}")
+    @GetMapping(value = "/groupings/{groupingPath:[\\w-:.]+}/grouping/{groupPath:[\\w-:.]+}/checkAddMember/{userToCheck:[\\w-:.]+}")
     public ResponseEntity<GenericServiceResult> checkAddMember(@RequestHeader("current_user") String currentUser,
             @PathVariable String groupingPath, @PathVariable String groupPath, @PathVariable String userToCheck) {
         return ResponseEntity
