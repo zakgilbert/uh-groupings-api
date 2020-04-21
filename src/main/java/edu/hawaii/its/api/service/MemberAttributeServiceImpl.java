@@ -2,6 +2,7 @@ package edu.hawaii.its.api.service;
 
 import edu.hawaii.its.api.repository.PersonRepository;
 import edu.hawaii.its.api.type.GenericServiceResult;
+import edu.hawaii.its.api.type.Group;
 import edu.hawaii.its.api.type.Grouping;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
 import edu.hawaii.its.api.type.Person;
@@ -557,16 +558,15 @@ public class MemberAttributeServiceImpl implements MemberAttributeService {
                     new GroupingsServiceResult(FAILURE, "The uid " + userToCheck + " is invalid"));
         }
 
-        String otherPath = "";
+        String otherPath = "null";
         String action;
         Person personToAdd;
         boolean isMemberPath;
         boolean isMemberOtherPath = false;
+        boolean inBasis = groupingAssignmentService.getGrouping(groupingPath, currentUser).getBasis().getUsernames()
+                .contains(userToCheck);
 
         switch (groupPath) {
-            case "owners":
-                otherPath = null;
-                break;
             case "include":
                 otherPath = groupingPath + ":exclude";
                 break;
@@ -581,8 +581,8 @@ public class MemberAttributeServiceImpl implements MemberAttributeService {
         try {
             isMemberPath = isMember(groupingPath, userToCheck);
 
-            if (null != otherPath) {
-                isMemberOtherPath = isMember(otherPath, userToCheck);
+            if (!(isMemberOtherPath = (isMember(otherPath, userToCheck)))) {
+                otherPath = "null";
             }
             personToAdd = membershipService.createNewPerson(userToCheck);
             personToAdd.setAttributes(getUserAttributes(currentUser, userToCheck));
@@ -590,9 +590,9 @@ public class MemberAttributeServiceImpl implements MemberAttributeService {
             logger.info(action);
 
             return new GenericServiceResult(
-                    Arrays.asList("result", "add", "addPath", "delete", "deletePath"),
+                    Arrays.asList("result", "add", "addPath", "delete", "deletePath", "inBasis"),
                     new GroupingsServiceResult(SUCCESS, action, personToAdd), !isMemberPath,
-                    groupingPath, isMemberOtherPath, otherPath);
+                    groupingPath, isMemberOtherPath, otherPath, inBasis);
         } catch (GcWebServiceError e) {
             // Path is invalid.
             logger.error(action, e);

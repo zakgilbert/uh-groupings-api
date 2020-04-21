@@ -270,7 +270,7 @@ public class GroupingsRestControllerv2_1 {
                 .body(memberAttributeService.checkAddMember(groupingPath, groupPath, currentUser, userToCheck));
     }
 
-    @PutMapping(value = "/groupings/addPath/{addPath:[\\w-:.]+}/{delPath:[\\w-:.]+}/addMember/{userToAdd:[\\w-:.]+}")
+    @PutMapping(value = "/groupings/{addPath:[\\w-:.]+}/{delPath:[\\w-:.]+}/addMember/{userToAdd:[\\w-:.]+}")
     public ResponseEntity<GenericServiceResult> addMember(@RequestHeader("current_user") String currentUser,
             @PathVariable String addPath, @PathVariable String delPath, @PathVariable String userToAdd) {
         return ResponseEntity

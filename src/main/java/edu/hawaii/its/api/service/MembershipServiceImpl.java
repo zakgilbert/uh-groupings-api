@@ -615,12 +615,12 @@ public class MembershipServiceImpl implements MembershipService {
         GenericServiceResult genericServiceResult = new GenericServiceResult("addResult",
                 helperService.makeGroupingsServiceResult(
                         grouperFS.makeWsAddMemberResults(addPath, user, createNewPerson(userToAdd)),
-                        "added: " + userToAdd + "; path: " + addPath));
+                        "add: " + userToAdd + "; path: " + addPath));
         if (delPathIsValid) {
             genericServiceResult.add("deleteResult", helperService
                     .makeGroupingsServiceResult(
                             grouperFS.makeWsDeleteMemberResults(delPath, user, createNewPerson(userToAdd)),
-                            "deleted: " + userToAdd + "; path: " + delPath,
+                            "delete: " + userToAdd + "; path: " + delPath,
                             null));
         }
         return genericServiceResult;
