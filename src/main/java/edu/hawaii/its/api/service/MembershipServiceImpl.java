@@ -610,18 +610,16 @@ public class MembershipServiceImpl implements MembershipService {
         if (!memberAttributeService.isSuperuser(currentUser) && !memberAttributeService.isAdmin(currentUser)) {
             throw new AccessDeniedException(INSUFFICIENT_PRIVILEGES);
         }
-        boolean delPathIsValid = !"null".equals(delPath);
-        WsSubjectLookup user = grouperFS.makeWsSubjectLookup(userToAdd);
+        WsSubjectLookup user = grouperFS.makeWsSubjectLookup(currentUser);
         GenericServiceResult genericServiceResult = new GenericServiceResult("addResult",
                 helperService.makeGroupingsServiceResult(
                         grouperFS.makeWsAddMemberResults(addPath, user, createNewPerson(userToAdd)),
                         "add: " + userToAdd + "; path: " + addPath));
-        if (delPathIsValid) {
+        if (!"null".equals(delPath)) {
             genericServiceResult.add("deleteResult", helperService
                     .makeGroupingsServiceResult(
                             grouperFS.makeWsDeleteMemberResults(delPath, user, createNewPerson(userToAdd)),
-                            "delete: " + userToAdd + "; path: " + delPath,
-                            null));
+                            "delete: " + userToAdd + "; path: " + delPath));
         }
         return genericServiceResult;
     }
