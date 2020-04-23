@@ -605,20 +605,35 @@ public class MembershipServiceImpl implements MembershipService {
         return genericServiceResult;
     }
 
+    /*
+    GenericServiceResult genericServiceResult = new GenericServiceResult();
+    WsSubjectLookup wsSubjectLookup = grouperFS.makeWsSubjectLookup(currentUser);
+    String addAction = "add: " + userToAdd + "; path: " + addPath;
+    Person personToAdd = createNewPerson(userToAdd);
+    WsAddMemberResults wsAddMemberResults = grouperFS.makeWsAddMemberResults(addPath, wsSubjectLookup, personToAdd);
+    GroupingsServiceResult addResult = helperService.makeGroupingsServiceResult(wsAddMemberResults, addAction);
+    genericServiceResult.add("addResult", addResult);
+     */
     @Override
     public GenericServiceResult addMember(String addPath, String delPath, String currentUser, String userToAdd) {
+
+        // Check if currentUser has sufficient privileges
         if (!memberAttributeService.isSuperuser(currentUser) && !memberAttributeService.isAdmin(currentUser)) {
             throw new AccessDeniedException(INSUFFICIENT_PRIVILEGES);
         }
-        WsSubjectLookup user = grouperFS.makeWsSubjectLookup(currentUser);
+
+        // Perform add operation with Grouper
+        WsSubjectLookup wsSubjectLookup = grouperFS.makeWsSubjectLookup(currentUser);
         GenericServiceResult genericServiceResult = new GenericServiceResult("addResult",
                 helperService.makeGroupingsServiceResult(
-                        grouperFS.makeWsAddMemberResults(addPath, user, createNewPerson(userToAdd)),
+                        grouperFS.makeWsAddMemberResults(addPath, wsSubjectLookup, createNewPerson(userToAdd)),
                         "add: " + userToAdd + "; path: " + addPath));
+
+        // Perform delete operation with Grouper if delPath is not "null"
         if (!"null".equals(delPath)) {
             genericServiceResult.add("deleteResult", helperService
                     .makeGroupingsServiceResult(
-                            grouperFS.makeWsDeleteMemberResults(delPath, user, createNewPerson(userToAdd)),
+                            grouperFS.makeWsDeleteMemberResults(delPath, wsSubjectLookup, createNewPerson(userToAdd)),
                             "delete: " + userToAdd + "; path: " + delPath));
         }
         return genericServiceResult;
