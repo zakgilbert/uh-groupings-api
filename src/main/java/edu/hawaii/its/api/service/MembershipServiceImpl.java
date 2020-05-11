@@ -261,28 +261,99 @@ public class MembershipServiceImpl implements MembershipService {
      * Add a list of multiple usersToAdd to groupPath as ownerUsername
      */
     @Override
-    public List<GroupingsServiceResult> addGroupMembers(String ownerUsername, String groupPath,
+    public GenericServiceResult addGroupMembers(String currentUser, String groupPath,
             List<String> usersToAdd) {
-        List<GroupingsServiceResult> gsrs = new ArrayList<>();
-        for (String userToAdd : usersToAdd) {
-            try {
-                gsrs.addAll(addGroupMember(ownerUsername, groupPath, userToAdd));
-            } catch (GcWebServiceError e) {
-            }
-        }
+        String composite = helperService.parentGroupingPath(groupPath);
+        String delPath = null;
+        List<String> membersToRemove = new ArrayList<>();
+        List<String> membersToAdd = new ArrayList<>();
+        String action = "[addGroupMembers: ";
 
-        if (usersToAdd.size() > 100) {
+        if (!memberAttributeService.isOwner(composite, currentUser) && !memberAttributeService.isAdmin(currentUser)) {
+            throw new AccessDeniedException(INSUFFICIENT_PRIVILEGES);
+        }
+        if (groupPath.endsWith(INCLUDE)) {
+            delPath = composite + EXCLUDE;
+        }
+        if (groupPath.endsWith(EXCLUDE)) {
+            delPath = composite + INCLUDE;
+        }
+        if (null != delPath) {
+            membersToRemove = getValidMembers(delPath, usersToAdd);
+        }
+        membersToAdd = getAddableUsernames(groupPath, usersToAdd);
+        if (membersToAdd.size() == 0) {
+            return new GenericServiceResult(
+                    new GroupingsServiceResult(FAILURE, action + "No valid usernames in addList.]"));
+        }
+        WsSubjectLookup user = grouperFS.makeWsSubjectLookup(currentUser);
+        WsDeleteMemberResults deleteMemberResults = null;
+        WsAddMemberResults addMemberResults;
+        if (membersToRemove.size() > 0) {
+            deleteMemberResults = grouperFS.makeWsDeleteMemberResults(delPath, user, membersToRemove);
+            updateLastModified(delPath);
+        }
+        addMemberResults = grouperFS.makeWsAddMemberResults(groupPath, user, membersToAdd);
+        GenericServiceResult genericServiceResult =
+                new GenericServiceResult(helperService.makeGroupingsServiceResult(addMemberResults,
+                        action + "addPath: " + groupPath + ";"));
+        genericServiceResult.add("membersAdded", membersToAdd);
+        genericServiceResult.add("membersRemoved", membersToRemove);
+        
+        updateLastModified(composite);
+        updateLastModified(groupPath);
+
+        return genericServiceResult;
+
+        /*
+        if (membersToAdd.size() > 100) {
             groupingsMailService
                     .setJavaMailSender(javaMailSender)
                     .setFrom("no-reply@its.hawaii.edu");
             groupingsMailService.sendCSVMessage(
                     "no-reply@its.hawaii.edu",
-                    groupingsMailService.getUserEmail(ownerUsername),
+                    groupingsMailService.getUserEmail(currentUser),
                     "Groupings: Add " + groupPath,
                     "",
                     "UH-Groupings-Report-" + LocalDateTime.now().toString() + ".csv", gsrs);
         }
-        return gsrs;
+         */
+    }
+
+    public List<String> getAddableUsernames(String path, List<String> potentialMembers) {
+        List<String> addableUsernames = new ArrayList<>();
+
+        for (String potentialMember : potentialMembers) {
+            try {
+                if (!memberAttributeService.isMember(path, potentialMember)) {
+                    addableUsernames.add(potentialMember);
+                }
+            } catch (GcWebServiceError e) {
+                logger.info("\"" + potentialMember + "\"" + " is invalid.", e);
+            }
+        }
+        return addableUsernames;
+    }
+
+    /**
+     * From a list of potentialMembers, return a list of members from grouping at path.
+     *
+     * @param path             Path of grouping and group.
+     * @param potentialMembers List to be tested.
+     * @return A list of valid members.
+     */
+    public List<String> getValidMembers(String path, List<String> potentialMembers) {
+        List<String> members = new ArrayList<>();
+        for (String potentialMember : potentialMembers) {
+            try {
+                if (memberAttributeService.isMember(path, potentialMember)) {
+                    members.add(potentialMember);
+                }
+            } catch (GcWebServiceError e) {
+                logger.info("\"" + potentialMember + "\"" + " is invalid.", e);
+            }
+        }
+        return members;
     }
 
     /**
@@ -352,27 +423,6 @@ public class MembershipServiceImpl implements MembershipService {
 
         return new GenericServiceResult(helperService.makeGroupingsServiceResult(deleteMemberResults, action),
                 Arrays.asList("usersToDelete", "membersDeleted"), usersToDelete, membersToDelete);
-    }
-
-    /**
-     * From a list of potentialMembers, return a list of members from grouping at path.
-     *
-     * @param path             Path of grouping and group.
-     * @param potentialMembers List to be tested.
-     * @return A list of valid members.
-     */
-    public List<String> getValidMembers(String path, List<String> potentialMembers) {
-        List<String> members = new ArrayList<>();
-        for (String potentialMember : potentialMembers) {
-            try {
-                if (memberAttributeService.isMember(path, potentialMember)) {
-                    members.add(potentialMember);
-                }
-            } catch (GcWebServiceError e) {
-                logger.info("\"" + potentialMember + "\"" + " is invalid for deletion", e);
-            }
-        }
-        return members;
     }
 
     @Override
@@ -639,23 +689,6 @@ public class MembershipServiceImpl implements MembershipService {
                 action);
     }
 
-    @Override public GenericServiceResult generic() {
-        GenericServiceResult genericServiceResult = new GenericServiceResult();
-
-        String hello = "HelloWorld!";
-        GroupingsServiceResult groupingsServiceResult =
-                new GroupingsServiceResult(SUCCESS, "Testing: GenericServiceResult");
-        List<String> fbb = Arrays.asList("foo", "bar", "baz");
-
-        genericServiceResult.add("hello", hello);
-        genericServiceResult.add("fbb", fbb);
-        genericServiceResult.add(Arrays.asList("groupingsServiceResult", "boolean"), groupingsServiceResult, true);
-        genericServiceResult.add("int", 1);
-
-        return genericServiceResult;
-    }
-
-    //logic for adding a member
     public List<GroupingsServiceResult> addMemberHelper(String username, String groupPath, Person personToAdd) {
         logger.info(
                 "addMemberHelper; user: " + username + "; group: " + groupPath + "; personToAdd: " + personToAdd + ";");

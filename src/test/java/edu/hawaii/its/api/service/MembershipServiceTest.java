@@ -223,75 +223,9 @@ public class MembershipServiceTest {
     }
 
     @Test
-    @Ignore
-    public void addGroupingMemberTest() {
-        Iterable<Grouping> group = groupingRepository.findAll();
-        List<GroupingsServiceResult> listGsr;
-        GroupingsServiceResult gsr;
-
-        // Base test
-        // Remove person who's not in composite from exclude and return SUCCESS
-        listGsr = membershipService.addGroupingMember(users.get(0).getUsername(), GROUPING_3_PATH,
-                users.get(2).getUsername());
-        assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
-
-        //todo Case where !inComposite && !inBasis is impossible w/ current db
-
-        // In composite
-        listGsr = membershipService.addGroupingMember(users.get(0).getUsername(), GROUPING_3_PATH,
-                users.get(5).getUsername());
-        assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
-
-        //todo Case where inBasis && inInclude is impossible w/ current db
-
-        // Test if user is not an owner
-        try {
-            listGsr = membershipService.addGroupingMember(users.get(5).getUsername(), GROUPING_3_PATH,
-                    users.get(3).getUsername());
-            assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
-        } catch (AccessDeniedException ade) {
-            assertThat(INSUFFICIENT_PRIVILEGES, is(ade.getMessage()));
-        }
-
-        // Test if user is admin
-        listGsr = membershipService.addGroupingMember(ADMIN_USER, GROUPING_3_PATH,
-                users.get(3).getUhUuid());
-        assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
-
-        String ownerUsername = users.get(0).getUsername();
-        String groupingPath = GROUPING_3_PATH;
-        String userToAdd = users.get(5).getUsername();
-        String uuidToAdd = users.get(5).getUhUuid();
-
-        listGsr = membershipService.addGroupingMember(ownerUsername, groupingPath, userToAdd);
-        assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
-
-        listGsr = membershipService.addGroupingMember(ownerUsername, groupingPath, uuidToAdd);
-        assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
-    }
-
-    @Test
-    @Ignore
-    public void addGroupMemberTest() {
-
-        List<GroupingsServiceResult> listGsr;
-
-        String ownerUsername = users.get(0).getUsername();
-        String groupPath = GROUPING_3_INCLUDE_PATH;
-        String userToAdd = users.get(2).getUsername();
-        String uuidToAdd = users.get(2).getUhUuid();
-
-        listGsr = membershipService.addGroupMember(ownerUsername, groupPath, userToAdd);
-        assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
-
-        listGsr = membershipService.addGroupMember(ownerUsername, groupPath, uuidToAdd);
-        assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
-
-    }
-
-    @Test
     public void addGroupMembersTest() throws IOException, MessagingException {
 
+        /*
         List<GroupingsServiceResult> listGsr;
         List<String> usersToAdd = new ArrayList<String>();
         List<String> uuidsToAdd = new ArrayList<String>();
@@ -314,6 +248,8 @@ public class MembershipServiceTest {
         for (int i = 0; i < listGsr.size(); i++) {
             assertTrue(listGsr.get(i).getResultCode().startsWith(SUCCESS));
         }
+
+         */
     }
 
     @Test

@@ -16,7 +16,7 @@ public interface MembershipService {
 
     List<GroupingsServiceResult> addGroupMember(String ownerUsername, String groupingPath, String userToAdd);
 
-    List<GroupingsServiceResult> addGroupMembers(String ownerUsername, String groupingPath, List<String> usersToAdd)
+    GenericServiceResult addGroupMembers(String currentUser, String groupingPath, List<String> usersToAdd)
             throws IOException, MessagingException;
 
     List<GroupingsServiceResult> deleteGroupingMember(String ownerUsername, String groupingPath,
@@ -55,5 +55,4 @@ public interface MembershipService {
 
     GroupingsServiceResult removeSelfOpted(String groupPath, String username);
 
-    GenericServiceResult generic();
 }

@@ -238,34 +238,17 @@ public class GroupingsRestControllerv2_1 {
      * @param uid:  uid or uuid of member to add to include
      * @return Information about results of the operation
      */
-    @PutMapping(value = "/groupings/{path:[\\w-:.]+}/includeMembers/{uid:[\\w-:.]+}")
-    public ResponseEntity<List<GroupingsServiceResult>> includeMembers(
+    @PutMapping(value = "/groupings/{path:[\\w-:.]+}/includeMembers/{uid}")
+    public ResponseEntity<GenericServiceResult> includeMembers(
             @RequestHeader("current_user") String currentUser, @PathVariable String path,
-            @PathVariable String uid) {
+            @PathVariable List<String> uid) throws IOException, MessagingException {
+
         logger.info("Entered REST includeMembers...");
-        path = path + INCLUDE;
         return ResponseEntity
                 .ok()
-                .body(membershipService.addGroupMember(currentUser, path, uid));
+                .body(membershipService.addGroupMembers(currentUser, path + EXCLUDE, uid));
     }
 
-    /**
-     * Update grouping to add include multiple members
-     *
-     * @param path: path of grouping to update
-     * @param uids: uids or uuids of members to add to include
-     * @return Information about results of the operation
-     */
-    @PutMapping(value = "/groupings/{path:[\\w-:.]+}/includeMultipleMembers/{uids}")
-    public ResponseEntity<List<GroupingsServiceResult>> includeMultipleMembers(
-            @RequestHeader("current_user") String currentUser, @PathVariable String path,
-            @PathVariable List<String> uids) throws IOException, MessagingException {
-        logger.info("Entered REST includeMultipleMembers...");
-        path = path + INCLUDE;
-        return ResponseEntity
-                .ok()
-                .body(membershipService.addGroupMembers(currentUser, path, uids));
-    }
 
     /**
      * Update grouping to add new exclude member
@@ -274,34 +257,17 @@ public class GroupingsRestControllerv2_1 {
      * @param uid:  uid or uuid of member to add to exclude
      * @return Information about results of the operation
      */
-    @PutMapping(value = "/groupings/{path:[\\w-:.]+}/excludeMembers/{uid:[\\w-:.]+}")
-    public ResponseEntity<List<GroupingsServiceResult>> excludeMembers(
+    @PutMapping(value = "/groupings/{path:[\\w-:.]+}/excludeMembers/{uid}")
+    public ResponseEntity<GenericServiceResult> excludeMembers(
             @RequestHeader("current_user") String currentUser, @PathVariable String path,
-            @PathVariable String uid) {
+            @PathVariable List<String> uid) throws IOException, MessagingException {
+
         logger.info("Entered REST excludeMembers...");
-        path = path + EXCLUDE;
         return ResponseEntity
                 .ok()
-                .body(membershipService.addGroupMember(currentUser, path, uid));
+                .body(membershipService.addGroupMembers(currentUser, path + EXCLUDE, uid));
     }
 
-    /**
-     * Update grouping to add exclude multiple members
-     *
-     * @param path: path of grouping to update
-     * @param uids: uids or uuids of members to add to exclude
-     * @return Information about results of the operation
-     */
-    @PutMapping(value = "/groupings/{path:[\\w-:.]+}/excludeMultipleMembers/{uids}")
-    public ResponseEntity<List<GroupingsServiceResult>> excludeMultipleMembers(
-            @RequestHeader("current_user") String currentUser, @PathVariable String path,
-            @PathVariable List<String> uids) throws IOException, MessagingException {
-        logger.info("Entered REST excludeMultipleMembers...");
-        path = path + EXCLUDE;
-        return ResponseEntity
-                .ok()
-                .body(membershipService.addGroupMembers(currentUser, path, uids));
-    }
 
     /**
      * Delete, as the currentUser all valid uids from exclude group at grouping.
