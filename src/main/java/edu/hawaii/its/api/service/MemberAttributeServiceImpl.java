@@ -542,4 +542,8 @@ public class MemberAttributeServiceImpl implements MemberAttributeService {
             return new GenericServiceResult(new GroupingsServiceResult(FAILURE, action + ";, " + e.getMessage()));
         }
     }
+
+    @Override public String getUid(String uhUuid) {
+        return null;
+    }
 }

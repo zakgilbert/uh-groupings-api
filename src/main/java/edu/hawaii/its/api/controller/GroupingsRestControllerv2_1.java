@@ -91,7 +91,6 @@ public class GroupingsRestControllerv2_1 {
                 .body("University of Hawaii Groupings");
     }
 
-
     /**
      * Get all admins and groupings
      *
@@ -246,9 +245,8 @@ public class GroupingsRestControllerv2_1 {
         logger.info("Entered REST includeMembers...");
         return ResponseEntity
                 .ok()
-                .body(membershipService.addGroupMembers(currentUser, path + EXCLUDE, uid));
+                .body(membershipService.addGroupMembers(currentUser, path + INCLUDE, uid));
     }
-
 
     /**
      * Update grouping to add new exclude member
@@ -267,7 +265,6 @@ public class GroupingsRestControllerv2_1 {
                 .ok()
                 .body(membershipService.addGroupMembers(currentUser, path + EXCLUDE, uid));
     }
-
 
     /**
      * Delete, as the currentUser all valid uids from exclude group at grouping.

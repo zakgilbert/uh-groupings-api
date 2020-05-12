@@ -266,7 +266,7 @@ public class MembershipServiceImpl implements MembershipService {
         String composite = helperService.parentGroupingPath(groupPath);
         String delPath = null;
         List<String> membersToRemove = new ArrayList<>();
-        List<String> membersToAdd = new ArrayList<>();
+        List<String> membersToAdd;
         String action = "[addGroupMembers: ";
 
         if (!memberAttributeService.isOwner(composite, currentUser) && !memberAttributeService.isAdmin(currentUser)) {
@@ -282,24 +282,33 @@ public class MembershipServiceImpl implements MembershipService {
             membersToRemove = getValidMembers(delPath, usersToAdd);
         }
         membersToAdd = getAddableUsernames(groupPath, usersToAdd);
-        if (membersToAdd.size() == 0) {
+        if (membersToAdd.size() < 1) {
             return new GenericServiceResult(
                     new GroupingsServiceResult(FAILURE, action + "No valid usernames in addList.]"));
         }
+
         WsSubjectLookup user = grouperFS.makeWsSubjectLookup(currentUser);
         WsDeleteMemberResults deleteMemberResults = null;
         WsAddMemberResults addMemberResults;
+
         if (membersToRemove.size() > 0) {
             deleteMemberResults = grouperFS.makeWsDeleteMemberResults(delPath, user, membersToRemove);
             updateLastModified(delPath);
         }
+
         addMemberResults = grouperFS.makeWsAddMemberResults(groupPath, user, membersToAdd);
         GenericServiceResult genericServiceResult =
                 new GenericServiceResult(helperService.makeGroupingsServiceResult(addMemberResults,
                         action + "addPath: " + groupPath + ";"));
-        genericServiceResult.add("membersAdded", membersToAdd);
+
         genericServiceResult.add("membersRemoved", membersToRemove);
-        
+
+        for (String member : membersToAdd) {
+            Person person = createNewPerson(member);
+            person.setAttributes(memberAttributeService.getUserAttributes(currentUser, member));
+            genericServiceResult.add(member, person);
+        }
+
         updateLastModified(composite);
         updateLastModified(groupPath);
 
