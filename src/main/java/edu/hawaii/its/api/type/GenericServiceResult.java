@@ -99,4 +99,8 @@ public class GenericServiceResult {
         }
         return strs.toString();
     }
+
+    public boolean contains(String key) {
+        return this.map.containsKey(key);
+    }
 }

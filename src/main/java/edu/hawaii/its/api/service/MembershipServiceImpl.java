@@ -16,6 +16,7 @@ import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssignValue;
 import edu.internet2.middleware.grouperClient.ws.beans.WsDeleteMemberResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetGrouperPrivilegesLiteResult;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembershipsResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGetSubjectsResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
 import org.apache.commons.logging.Log;
@@ -282,6 +283,8 @@ public class MembershipServiceImpl implements MembershipService {
             membersToRemove = getValidMembers(delPath, usersToAdd);
         }
         membersToAdd = getAddableUsernames(groupPath, usersToAdd);
+        return new GenericServiceResult("membersToAdd", membersToAdd);
+        /*
         if (membersToAdd.size() < 1) {
             return new GenericServiceResult(
                     new GroupingsServiceResult(FAILURE, action + "No valid usernames in addList.]"));
@@ -314,7 +317,6 @@ public class MembershipServiceImpl implements MembershipService {
 
         return genericServiceResult;
 
-        /*
         if (membersToAdd.size() > 100) {
             groupingsMailService
                     .setJavaMailSender(javaMailSender)
@@ -334,10 +336,14 @@ public class MembershipServiceImpl implements MembershipService {
 
         for (String potentialMember : potentialMembers) {
             try {
-                if (!memberAttributeService.isMember(path, potentialMember)) {
+                WsSubjectLookup subjectLookup = grouperFS.makeWsSubjectLookup(potentialMember);
+                WsGetSubjectsResults wsGetSubjectsResults = grouperFS.makeWsGetSubjectsResults(subjectLookup);
+                if (!memberAttributeService.isMember(path, potentialMember)
+                        && wsGetSubjectsResults.getWsSubjects().length > 0) {
                     addableUsernames.add(potentialMember);
                 }
-            } catch (GcWebServiceError e) {
+            } catch (NullPointerException | GcWebServiceError e) {
+                addableUsernames.remove(potentialMember);
                 logger.info("\"" + potentialMember + "\"" + " is invalid.", e);
             }
         }

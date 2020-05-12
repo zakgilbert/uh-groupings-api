@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.parameters.P;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -225,31 +226,45 @@ public class MembershipServiceTest {
     @Test
     public void addGroupMembersTest() throws IOException, MessagingException {
 
-        /*
-        List<GroupingsServiceResult> listGsr;
-        List<String> usersToAdd = new ArrayList<String>();
-        List<String> uuidsToAdd = new ArrayList<String>();
-
         String ownerUsername = users.get(0).getUsername();
-        String groupPath = GROUPING_3_INCLUDE_PATH;
 
-        usersToAdd.add(users.get(2).getUsername());
-        usersToAdd.add(users.get(3).getUsername());
-
-        uuidsToAdd.add(users.get(2).getUhUuid());
-        uuidsToAdd.add(users.get(3).getUhUuid());
-
-        listGsr = membershipService.addGroupMembers(ownerUsername, groupPath, usersToAdd);
-        for (int i = 0; i < listGsr.size(); i++) {
-            assertTrue(listGsr.get(i).getResultCode().startsWith(SUCCESS));
+        List<String> invalidIncludeList = new ArrayList<>();
+        for (int i = 2; i < 6; i++) {
+            invalidIncludeList.add(users.get(i).getUsername());
         }
+        invalidIncludeList.add("zzzz");
+        GenericServiceResult invalidIncludeResults =
+                membershipService.addGroupMembers(ownerUsername, GROUPING_3_INCLUDE_PATH, invalidIncludeList);
+        assertEquals(SUCCESS, invalidIncludeResults.getGroupingsServiceResult().getResultCode());
+        System.out.println(invalidIncludeResults.toString());
 
-        listGsr = membershipService.addGroupMembers(ownerUsername, groupPath, uuidsToAdd);
-        for (int i = 0; i < listGsr.size(); i++) {
-            assertTrue(listGsr.get(i).getResultCode().startsWith(SUCCESS));
+        /*
+        List<String> invalidExcludeList = new ArrayList<>();
+        for (int i = 4; i < 9; i++) {
+            invalidExcludeList.add(users.get(i).getUsername());
         }
-
+        GenericServiceResult invalidExcludeResult =
+                membershipService.addGroupMembers(ownerUsername, GROUPING_3_EXCLUDE_PATH, invalidExcludeList);
+        System.out.println(invalidExcludeResult.toString());
+        for (int i = 4; i < 9; i++) {
+            assertTrue(invalidExcludeResult.contains(users.get(i).getUsername()));
+        }
          */
+
+
+        /*
+        GenericServiceResult invalidExcludeResults =
+                membershipService.addGroupMembers(ownerUsername, GROUPING_3_EXCLUDE_PATH,
+                        Arrays.asList("zzzz", users.get(5).getUsername()));
+        assertEquals(SUCCESS, invalidExcludeResults.getGroupingsServiceResult().getResultCode());
+        assertTrue(memberAttributeService.isMember(GROUPING_3_EXCLUDE_PATH, users.get(5).getUsername()));
+         */
+
+        GenericServiceResult includeResults = membershipService
+                .addGroupMembers(ownerUsername, GROUPING_3_INCLUDE_PATH,
+                        Arrays.asList(users.get(5).getUsername(), users.get(3).getUsername()));
+        assertEquals(SUCCESS, invalidIncludeResults.getGroupingsServiceResult().getResultCode());
+
     }
 
     @Test
