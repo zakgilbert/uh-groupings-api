@@ -228,6 +228,16 @@ public class MembershipServiceTest {
 
         String ownerUsername = users.get(0).getUsername();
 
+        // List of valid users to include
+        List<String> validIncludeList = new ArrayList<>();
+        for (int i = 2; i < 6; i++) {
+            validIncludeList.add(users.get(i).getUsername());
+        }
+        GenericServiceResult validIncludeResults =
+                membershipService.addGroupMembers(ownerUsername, GROUPING_3_INCLUDE_PATH, validIncludeList);
+        assertEquals(SUCCESS, validIncludeResults.getGroupingsServiceResult().getResultCode());
+
+        // List of valid and invalid users to include
         List<String> invalidIncludeList = new ArrayList<>();
         for (int i = 2; i < 6; i++) {
             invalidIncludeList.add(users.get(i).getUsername());
@@ -237,35 +247,52 @@ public class MembershipServiceTest {
                 membershipService.addGroupMembers(ownerUsername, GROUPING_3_INCLUDE_PATH, invalidIncludeList);
         assertEquals(SUCCESS, invalidIncludeResults.getGroupingsServiceResult().getResultCode());
 
+        // Single user to include.
+        List<String> singleIncludeList = new ArrayList<>();
+        singleIncludeList.add(users.get(1).getUsername());
+        GenericServiceResult singleIncludeResults =
+                membershipService.addGroupMembers(ownerUsername, GROUPING_3_INCLUDE_PATH, singleIncludeList);
+        assertEquals(SUCCESS, singleIncludeResults.getGroupingsServiceResult().getResultCode());
 
+        // Single invalid to include.
+        List<String> singleInvalidIncludeList = new ArrayList<>();
+        singleInvalidIncludeList.add("zzzz");
+        GenericServiceResult singleInvalidIncludeResults =
+                membershipService.addGroupMembers(ownerUsername, GROUPING_3_INCLUDE_PATH, singleInvalidIncludeList);
+        assertEquals(FAILURE, singleInvalidIncludeResults.getGroupingsServiceResult().getResultCode());
 
-        /*
+        // List of valid users to exclude.
+        List<String> validExcludeList = new ArrayList<>();
+        for (int i = 4; i < 9; i++) {
+            validExcludeList.add(users.get(i).getUsername());
+        }
+        GenericServiceResult validExcludeResults =
+                membershipService.addGroupMembers(ownerUsername, GROUPING_3_EXCLUDE_PATH, validExcludeList);
+        assertEquals(SUCCESS, validExcludeResults.getGroupingsServiceResult().getResultCode());
+
+        // List of valid and invalid users to exclude.
         List<String> invalidExcludeList = new ArrayList<>();
         for (int i = 4; i < 9; i++) {
             invalidExcludeList.add(users.get(i).getUsername());
         }
-        GenericServiceResult invalidExcludeResult =
-                membershipService.addGroupMembers(ownerUsername, GROUPING_3_EXCLUDE_PATH, invalidExcludeList);
-        System.out.println(invalidExcludeResult.toString());
-        for (int i = 4; i < 9; i++) {
-            assertTrue(invalidExcludeResult.contains(users.get(i).getUsername()));
-        }
-         */
-
-
-        /*
+        invalidExcludeList.add("zzzz");
         GenericServiceResult invalidExcludeResults =
-                membershipService.addGroupMembers(ownerUsername, GROUPING_3_EXCLUDE_PATH,
-                        Arrays.asList("zzzz", users.get(5).getUsername()));
+                membershipService.addGroupMembers(ownerUsername, GROUPING_3_EXCLUDE_PATH, invalidExcludeList);
         assertEquals(SUCCESS, invalidExcludeResults.getGroupingsServiceResult().getResultCode());
-        assertTrue(memberAttributeService.isMember(GROUPING_3_EXCLUDE_PATH, users.get(5).getUsername()));
-         */
 
-        GenericServiceResult includeResults = membershipService
-                .addGroupMembers(ownerUsername, GROUPING_3_INCLUDE_PATH,
-                        Arrays.asList(users.get(5).getUsername(), users.get(3).getUsername()));
-        assertEquals(SUCCESS, invalidIncludeResults.getGroupingsServiceResult().getResultCode());
+        // Single user to exclude.
+        List<String> singleExcludeList = new ArrayList<>();
+        singleExcludeList.add(users.get(9).getUsername());
+        GenericServiceResult singleExcludeResults =
+                membershipService.addGroupMembers(ownerUsername, GROUPING_3_EXCLUDE_PATH, singleExcludeList);
+        assertEquals(SUCCESS, singleExcludeResults.getGroupingsServiceResult().getResultCode());
 
+        // Single invalid to exclude.
+        List<String> singleInvalidExcludeList = new ArrayList<>();
+        singleInvalidExcludeList.add("zzzz");
+        GenericServiceResult singleInvalidExcludeResults =
+                membershipService.addGroupMembers(ownerUsername, GROUPING_3_EXCLUDE_PATH, singleInvalidExcludeList);
+        assertEquals(FAILURE, singleInvalidExcludeResults.getGroupingsServiceResult().getResultCode());
     }
 
     @Test
