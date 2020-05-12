@@ -238,7 +238,7 @@ public class GroupingsRestControllerv2_1 {
      * @return Information about results of the operation
      */
     @PutMapping(value = "/groupings/{path:[\\w-:.]+}/includeMembers/{uid}")
-    public ResponseEntity<GenericServiceResult> includeMembers(
+    public ResponseEntity<GenericServiceResult> addIncludeMembers(
             @RequestHeader("current_user") String currentUser, @PathVariable String path,
             @PathVariable List<String> uid) throws IOException, MessagingException {
 
@@ -256,7 +256,7 @@ public class GroupingsRestControllerv2_1 {
      * @return Information about results of the operation
      */
     @PutMapping(value = "/groupings/{path:[\\w-:.]+}/excludeMembers/{uid}")
-    public ResponseEntity<GenericServiceResult> excludeMembers(
+    public ResponseEntity<GenericServiceResult> addExcludeMembers(
             @RequestHeader("current_user") String currentUser, @PathVariable String path,
             @PathVariable List<String> uid) throws IOException, MessagingException {
 

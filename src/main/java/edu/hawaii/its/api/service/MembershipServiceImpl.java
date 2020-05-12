@@ -262,61 +262,42 @@ public class MembershipServiceImpl implements MembershipService {
      * Add a list of multiple usersToAdd to groupPath as ownerUsername
      */
     @Override
-    public GenericServiceResult addGroupMembers(String currentUser, String groupPath,
-            List<String> usersToAdd) {
+    public GenericServiceResult addGroupMembers(String currentUser, String groupPath, List<String> usersToAdd) {
+
         String composite = helperService.parentGroupingPath(groupPath);
-        String delPath = null;
-        List<String> membersToRemove = new ArrayList<>();
-        List<String> membersToAdd;
+        List<GroupingsServiceResult> membersAddedResults = new ArrayList<>();
         String action = "[addGroupMembers: ";
+        String result = FAILURE;
 
         if (!memberAttributeService.isOwner(composite, currentUser) && !memberAttributeService.isAdmin(currentUser)) {
             throw new AccessDeniedException(INSUFFICIENT_PRIVILEGES);
         }
-        if (groupPath.endsWith(INCLUDE)) {
-            delPath = composite + EXCLUDE;
-        }
-        if (groupPath.endsWith(EXCLUDE)) {
-            delPath = composite + INCLUDE;
-        }
-        if (null != delPath) {
-            membersToRemove = getValidMembers(delPath, usersToAdd);
-        }
-        membersToAdd = getAddableUsernames(groupPath, usersToAdd);
-        return new GenericServiceResult("membersToAdd", membersToAdd);
-        /*
-        if (membersToAdd.size() < 1) {
-            return new GenericServiceResult(
-                    new GroupingsServiceResult(FAILURE, action + "No valid usernames in addList.]"));
-        }
+        String removalPath = (groupPath.endsWith(INCLUDE) ? (composite + EXCLUDE) : (composite + INCLUDE));
 
         WsSubjectLookup user = grouperFS.makeWsSubjectLookup(currentUser);
-        WsDeleteMemberResults deleteMemberResults = null;
-        WsAddMemberResults addMemberResults;
+        for (String userToAdd : usersToAdd) {
+            if (!memberAttributeService.isMember(groupPath, userToAdd)) {
+                Person person = createNewPerson(userToAdd);
+                try {
+                    person.setAttributes(memberAttributeService.getUserAttributes(currentUser, userToAdd));
+                    WsAddMemberResults addMemberResults = grouperFS.makeWsAddMemberResults(groupPath, user, person);
+                    String currentAction = "Added";
 
-        if (membersToRemove.size() > 0) {
-            deleteMemberResults = grouperFS.makeWsDeleteMemberResults(delPath, user, membersToRemove);
-            updateLastModified(delPath);
+                    if (memberAttributeService.isMember(removalPath, userToAdd)) {
+                        grouperFS.makeWsDeleteMemberResults(removalPath, user, person);
+                        currentAction = "Moved";
+                    }
+                    membersAddedResults.add(helperService
+                            .makeGroupingsServiceResult(addMemberResults, currentAction, person));
+                    result = SUCCESS;
+                } catch (GcWebServiceError e) {
+                    membersAddedResults.add(new GroupingsServiceResult(FAILURE, "Invalid", person));
+                }
+            }
         }
+        return new GenericServiceResult(new GroupingsServiceResult(result, action), "results", membersAddedResults);
 
-        addMemberResults = grouperFS.makeWsAddMemberResults(groupPath, user, membersToAdd);
-        GenericServiceResult genericServiceResult =
-                new GenericServiceResult(helperService.makeGroupingsServiceResult(addMemberResults,
-                        action + "addPath: " + groupPath + ";"));
-
-        genericServiceResult.add("membersRemoved", membersToRemove);
-
-        for (String member : membersToAdd) {
-            Person person = createNewPerson(member);
-            person.setAttributes(memberAttributeService.getUserAttributes(currentUser, member));
-            genericServiceResult.add(member, person);
-        }
-
-        updateLastModified(composite);
-        updateLastModified(groupPath);
-
-        return genericServiceResult;
-
+        /*
         if (membersToAdd.size() > 100) {
             groupingsMailService
                     .setJavaMailSender(javaMailSender)
@@ -329,25 +310,6 @@ public class MembershipServiceImpl implements MembershipService {
                     "UH-Groupings-Report-" + LocalDateTime.now().toString() + ".csv", gsrs);
         }
          */
-    }
-
-    public List<String> getAddableUsernames(String path, List<String> potentialMembers) {
-        List<String> addableUsernames = new ArrayList<>();
-
-        for (String potentialMember : potentialMembers) {
-            try {
-                WsSubjectLookup subjectLookup = grouperFS.makeWsSubjectLookup(potentialMember);
-                WsGetSubjectsResults wsGetSubjectsResults = grouperFS.makeWsGetSubjectsResults(subjectLookup);
-                if (!memberAttributeService.isMember(path, potentialMember)
-                        && wsGetSubjectsResults.getWsSubjects().length > 0) {
-                    addableUsernames.add(potentialMember);
-                }
-            } catch (NullPointerException | GcWebServiceError e) {
-                addableUsernames.remove(potentialMember);
-                logger.info("\"" + potentialMember + "\"" + " is invalid.", e);
-            }
-        }
-        return addableUsernames;
     }
 
     /**

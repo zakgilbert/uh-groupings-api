@@ -48,7 +48,7 @@ public class GroupingsServiceResult {
     public String toString() {
         return "GroupingsServiceResult [action=" + action
                 + ", resultCode=" + resultCode
-                + "]";
+                + ", person=" + person.toString() + "]";
     }
 
 }

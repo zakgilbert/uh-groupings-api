@@ -236,7 +236,8 @@ public class MembershipServiceTest {
         GenericServiceResult invalidIncludeResults =
                 membershipService.addGroupMembers(ownerUsername, GROUPING_3_INCLUDE_PATH, invalidIncludeList);
         assertEquals(SUCCESS, invalidIncludeResults.getGroupingsServiceResult().getResultCode());
-        System.out.println(invalidIncludeResults.toString());
+
+
 
         /*
         List<String> invalidExcludeList = new ArrayList<>();
