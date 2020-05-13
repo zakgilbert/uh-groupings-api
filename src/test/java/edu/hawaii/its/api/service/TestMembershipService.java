@@ -551,6 +551,7 @@ public class TestMembershipService {
         assertFalse(memberAttributeService.isMember(GROUPING_BASIS, ownerUsername));
     }
 
+    /*
     @Test
     @Ignore
     public void addGroupMemberTest() {
@@ -680,30 +681,39 @@ public class TestMembershipService {
 
         membershipService.deleteGroupMember(ownerUsername, GROUPING_OWNERS, username[2]);
     }
+     */
 
     @Test
     public void addGroupMembersTest() throws IOException, MessagingException {
-        /*
-        String ownerUsername = username[0];
 
-        List<GroupingsServiceResult> results;
-        List<String> usernames = new ArrayList<>();
-
-        for (int i = 0; i < 6; i++) {
-            usernames.add(username[i]);
+        // List of valid users to include.
+        List<String> addToIncludeList = new ArrayList<>(Arrays.asList(username).subList(4, 6));
+        GenericServiceResult addToIncludeResult =
+                membershipService.addGroupMembers(ADMIN, GROUPING_INCLUDE, addToIncludeList);
+        assertEquals(SUCCESS, addToIncludeResult.getGroupingsServiceResult().getResultCode());
+        for (String user : addToIncludeList) {
+            assertTrue(memberAttributeService.isMember(GROUPING_INCLUDE, user));
+            assertFalse(memberAttributeService.isMember(GROUPING_EXCLUDE, user));
         }
 
-        results = membershipService.addGroupMembers(ownerUsername, GROUPING_INCLUDE, usernames);
+        // Invalid user to include.
+        membershipService.addGroupMembers(ADMIN, GROUPING_INCLUDE, Arrays.asList("zzzz"));
+        assertFalse(memberAttributeService.isMember(GROUPING_INCLUDE, "zzzz"));
 
-        for (GroupingsServiceResult result : results) {
-            assertTrue(result.getResultCode().startsWith(SUCCESS));
+        // List of valid users to exclude.
+        List<String> addToExcludeList =
+                new ArrayList<>(Arrays.asList(username).subList(0, 5));
+        GenericServiceResult addToExcludeResult =
+                membershipService.addGroupMembers(ADMIN, GROUPING_EXCLUDE, addToExcludeList);
+        addToExcludeList.remove(3);
+        for (String user : addToExcludeList) {
+            assertTrue(memberAttributeService.isMember(GROUPING_EXCLUDE, user));
+            assertFalse(memberAttributeService.isMember(GROUPING_INCLUDE, user));
         }
+        // Invalid user to exclude.
+        membershipService.addGroupMembers(ADMIN, GROUPING_EXCLUDE, Collections.singletonList("zzzz"));
+        assertFalse(memberAttributeService.isMember(GROUPING_EXCLUDE, "zzzz"));
 
-        //        for (int i = 0; i < 6; i++) {
-        //            membershipService.deleteGroupMember(ownerUsername, GROUPING_INCLUDE, username[i]);
-        //        }
-
-         */
     }
 
     @Test
