@@ -192,26 +192,6 @@ public class MembershipServiceImpl implements MembershipService {
 
     public static final Log logger = LogFactory.getLog(MembershipServiceImpl.class);
 
-    // returns true if username is a UH id number
-    public boolean isUhUuid(String naming) {
-        return naming.matches("\\d+");
-    }
-
-    // Creates a Person depending on the input used. For example, if input is UhUuid, user will be created using that.
-    public Person createNewPerson(String userToAdd) {
-        Person createdPerson;
-
-        try {
-            Integer.parseInt(userToAdd);
-            createdPerson = new Person(null, userToAdd, null, null, null);
-
-        } catch (Exception NumberFormatException) {
-            createdPerson = new Person(null, null, userToAdd, null, null);
-        }
-
-        return createdPerson;
-    }
-
     // Adds a member to a Grouping from either UH username or UH ID number.
     @Override
     public List<GroupingsServiceResult> addGroupingMember(String username, String groupingPath,
@@ -965,6 +945,26 @@ public class MembershipServiceImpl implements MembershipService {
 
         return grouperFS.makeWsAssignAttributesResultsForMembership(ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP, operationName,
                 attributeUuid, membershipID);
+    }
+
+    // Creates a Person depending on the input used. For example, if input is UhUuid, user will be created using that.
+    private Person createNewPerson(String userToAdd) {
+        Person createdPerson;
+
+        try {
+            Integer.parseInt(userToAdd);
+            createdPerson = new Person(null, userToAdd, null, null, null);
+
+        } catch (Exception NumberFormatException) {
+            createdPerson = new Person(null, null, userToAdd, null, null);
+        }
+
+        return createdPerson;
+    }
+
+    // returns true if username is a UH id number
+    private boolean isUhUuid(String naming) {
+        return naming.matches("\\d+");
     }
 
 }
