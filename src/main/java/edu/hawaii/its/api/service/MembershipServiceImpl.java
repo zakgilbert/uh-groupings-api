@@ -295,6 +295,9 @@ public class MembershipServiceImpl implements MembershipService {
                 }
             }
         }
+        updateLastModified(removalPath);
+        updateLastModified(groupPath);
+        updateLastModified(composite);
         return new GenericServiceResult(new GroupingsServiceResult(result, action), "results", membersAddedResults);
 
         /*
