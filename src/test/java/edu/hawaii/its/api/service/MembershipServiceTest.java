@@ -237,6 +237,7 @@ public class MembershipServiceTest {
                 membershipService.addGroupMembers(ownerUsername, GROUPING_3_INCLUDE_PATH, validIncludeList);
         assertEquals(SUCCESS, validIncludeResults.getGroupingsServiceResult().getResultCode());
 
+        System.err.println(validIncludeResults.toString());
         // List of valid and invalid users to include
         List<String> invalidIncludeList = new ArrayList<>();
         for (int i = 2; i < 6; i++) {

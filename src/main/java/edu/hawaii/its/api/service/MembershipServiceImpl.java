@@ -273,6 +273,7 @@ public class MembershipServiceImpl implements MembershipService {
             throw new AccessDeniedException(INSUFFICIENT_PRIVILEGES);
         }
         String removalPath = (groupPath.endsWith(INCLUDE) ? (composite + EXCLUDE) : (composite + INCLUDE));
+        boolean removed = false;
 
         WsSubjectLookup user = grouperFS.makeWsSubjectLookup(currentUser);
         for (String userToAdd : usersToAdd) {
@@ -286,6 +287,7 @@ public class MembershipServiceImpl implements MembershipService {
                     if (memberAttributeService.isMember(removalPath, userToAdd)) {
                         grouperFS.makeWsDeleteMemberResults(removalPath, user, person);
                         currentAction = "Moved";
+                        removed = true;
                     }
                     membersAddedResults.add(helperService
                             .makeGroupingsServiceResult(addMemberResults, currentAction, person));
@@ -295,13 +297,15 @@ public class MembershipServiceImpl implements MembershipService {
                 }
             }
         }
-        updateLastModified(removalPath);
+        if (removed) {
+            updateLastModified(removalPath);
+        }
         updateLastModified(groupPath);
         updateLastModified(composite);
         return new GenericServiceResult(new GroupingsServiceResult(result, action), "results", membersAddedResults);
 
         /*
-        if (membersToAdd.size() > 100) {
+         (membersToAdd.size() > 100) .toString());
             groupingsMailService
                     .setJavaMailSender(javaMailSender)
                     .setFrom("no-reply@its.hawaii.edu");

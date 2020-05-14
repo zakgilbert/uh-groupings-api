@@ -695,6 +695,7 @@ public class TestMembershipService {
             assertTrue(memberAttributeService.isMember(GROUPING_INCLUDE, user));
             assertFalse(memberAttributeService.isMember(GROUPING_EXCLUDE, user));
         }
+        System.err.println(addToIncludeResult.toString());
 
         // Invalid user to include.
         membershipService.addGroupMembers(ADMIN, GROUPING_INCLUDE, Arrays.asList("zzzz"));
