@@ -246,12 +246,14 @@ public class MembershipServiceImpl implements MembershipService {
 
         String composite = helperService.parentGroupingPath(groupPath);
         List<GroupingsServiceResult> membersAddedResults = new ArrayList<>();
-        String action = "[addGroupMembers: ";
-        String result = FAILURE;
+        String action = "addGroupMembers; currentUser: " + "; "
+                + "groupPath: " + groupPath + "; " + "usersToAdd: " + usersToAdd.toString() + ";";
+        logger.info(action);
 
         if (!memberAttributeService.isOwner(composite, currentUser) && !memberAttributeService.isAdmin(currentUser)) {
             throw new AccessDeniedException(INSUFFICIENT_PRIVILEGES);
         }
+        String result = FAILURE;
         String removalPath = (groupPath.endsWith(INCLUDE) ? (composite + EXCLUDE) : (composite + INCLUDE));
         boolean removed = false;
 
