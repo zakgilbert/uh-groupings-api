@@ -199,6 +199,16 @@ public class GroupingsRestControllerv2_1 {
                 .body(groupingAssignmentService.getMembershipAssignment(currentUser, uid));
     }
 
+    @GetMapping(value = "/groupings/{path:[\\w-:.]+}/includeMembers/{uids}")
+    public ResponseEntity<GenericServiceResult> getValidPeople(@RequestHeader("current_user") String currentUser,
+            @PathVariable String path,
+            @PathVariable List<String> uids) {
+        logger.info("Entered REST getValidPeople...");
+        return ResponseEntity
+                .ok()
+                .body(memberAttributeService.getValidMembers(currentUser, path, uids));
+    }
+
     /**
      * if the user is allowed to opt into the grouping
      * this will add them to the include group of that grouping

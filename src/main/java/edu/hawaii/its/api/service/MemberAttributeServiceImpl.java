@@ -543,4 +543,37 @@ public class MemberAttributeServiceImpl implements MemberAttributeService {
         }
         throw new AccessDeniedException(INSUFFICIENT_PRIVILEGES);
     }
+
+    @Override
+    public GenericServiceResult getValidMembers(String currentUser, String path, List<String> potentialMembers) {
+        if (!isAdmin(currentUser) && !isOwner(currentUser)) {
+            throw new AccessDeniedException(INSUFFICIENT_PRIVILEGES);
+        }
+        List<GroupingsServiceResult> validMembers = new ArrayList<>();
+        String action = "getValidMembers";
+        String resultCode = FAILURE;
+
+        for (String potentialMember : potentialMembers) {
+            try {
+                WsSubjectLookup wsSubjectLookup = grouperFS.makeWsSubjectLookup(potentialMember);
+                WsGetSubjectsResults wsGetSubjectsResults = grouperFS.makeWsGetSubjectsResults(wsSubjectLookup);
+                Map<String, String> attributes = new HashMap<>();
+                String[] attributeValues = new String[5];
+                for (int i = 0; i < attributeValues.length; i++) {
+                    attributes.put(wsGetSubjectsResults.getSubjectAttributeNames()[i],
+                            wsGetSubjectsResults.getWsSubjects()[0].getAttributeValues()[i]);
+                }
+                Person person = new Person();
+                person.setAttributes(attributes);
+                GroupingsServiceResult groupingsServiceResult = hs.makeGroupingsServiceResult(SUCCESS, action);
+                groupingsServiceResult.setPerson(person);
+                validMembers.add(groupingsServiceResult);
+                resultCode = SUCCESS;
+            } catch (GcWebServiceError | NullPointerException e) {
+                validMembers.add(new GroupingsServiceResult(FAILURE, action, new Person(null, potentialMember)));
+            }
+
+        }
+        return new GenericServiceResult(Collections.singletonList("results"), validMembers);
+    }
 }
