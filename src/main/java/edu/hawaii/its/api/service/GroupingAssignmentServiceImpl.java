@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -231,13 +232,14 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
 
         return helperService.makeGroupings(ownedGroupings);
     }
+
     @Override
     public List<Grouping> excludeGroups(List<String> groupPaths) {
         List<String> excludeGroups = groupPaths
-            .stream()
-            .filter(groupPath -> groupPath.endsWith(EXCLUDE))
-            .map(groupPath -> groupPath.substring(0, groupPath.length() - EXCLUDE.length()))
-            .collect(Collectors.toList());
+                .stream()
+                .filter(groupPath -> groupPath.endsWith(EXCLUDE))
+                .map(groupPath -> groupPath.substring(0, groupPath.length() - EXCLUDE.length()))
+                .collect(Collectors.toList());
 
         // make sure the owner group actually correspond to a grouping
         List<String> excludeGroupings = helperService.extractGroupings(excludeGroups);
@@ -356,11 +358,10 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
     }
 
     /**
-     *
      * @param username: A string with the username of acting user
-     * @param uid: A string with the username of the user being acted upon
+     * @param uid:      A string with the username of the user being acted upon
      * @return membershipAssigment: A MembershipAssignment object with the membership
-     *
+     * <p>
      * Function call that makes calls to grouper in order to get the groupings a user is a member of and a list of
      * groupings a user can opt into.
      */
@@ -386,13 +387,12 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
         // Appends the excludes list to the combined.
         combinedGroupings.addAll(excludes);
 
-
         // Sets the groupings in and the groupings available to opt into attribute.
         membershipAssignment.setGroupingsIn(memeberships);
         membershipAssignment.setGroupingsToOptInTo(groupingsToOptInto(username, groupPaths));
 
         // Goes through all the groupings in memberships and adds them to appropriate attributes.
-        for (Grouping grouping:memeberships) {
+        for (Grouping grouping : memeberships) {
             // Adds the grouping name to the duplicate checker list.
             duplicateChecker.add(grouping.getPath());
 
@@ -410,13 +410,15 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
 
              */
             membershipAssignment.addInOwner(grouping.getPath(), false);
-            membershipAssignment.addInBasis(grouping.getPath(), memberAttributeService.isMember(grouping.getPath() + ":basis", uid));
+            membershipAssignment.addInBasis(grouping.getPath(),
+                    memberAttributeService.isMember(grouping.getPath() + ":basis", uid));
 
             // Checks if they are in the basis or not to determine which logic to use.
-            if(membershipAssignment.isInBasis(grouping.getPath())) {
+            if (membershipAssignment.isInBasis(grouping.getPath())) {
                 // If they are in the basis, they can be in the exclude, include, or neither so we must check both.
 
-                membershipAssignment.addInInclude(grouping.getPath(), memberAttributeService.isMember(grouping.getPath() + ":include", uid));
+                membershipAssignment.addInInclude(grouping.getPath(),
+                        memberAttributeService.isMember(grouping.getPath() + ":include", uid));
 
                 // Checks if the user is in the include, if they are in the include group add to the inExclude
                 // attribute the key-value <grouping-name, false>.
@@ -424,7 +426,8 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
                     membershipAssignment.addInExclude(grouping.getPath(), false);
                 } else {
                     // If they aren't in the include, check if they are in the exclude and add the key-value pair.
-                    membershipAssignment.addInExclude(grouping.getPath(), memberAttributeService.isMember(grouping.getPath() + ":exclude", uid));
+                    membershipAssignment.addInExclude(grouping.getPath(),
+                            memberAttributeService.isMember(grouping.getPath() + ":exclude", uid));
                 }
             } else {
                 // If they aren't in the basis but in the memberships groupings, they must either be in the
@@ -441,10 +444,11 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
 
         // Groupings in the excludes list are never in the memberships list. They are also never in the include.
         // We only need to check for the basis.
-        for (Grouping grouping : excludes){
+        for (Grouping grouping : excludes) {
             duplicateChecker.add(grouping.getPath());
             membershipAssignment.addInOwner(grouping.getPath(), false);
-            membershipAssignment.addInBasis(grouping.getPath(), memberAttributeService.isMember(grouping.getPath() + ":basis",uid));
+            membershipAssignment.addInBasis(grouping.getPath(),
+                    memberAttributeService.isMember(grouping.getPath() + ":basis", uid));
             membershipAssignment.addInExclude(grouping.getPath(), true);
             membershipAssignment.addInInclude(grouping.getPath(), false);
 
@@ -452,14 +456,17 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
 
         // If the person is an owner of a grouping, they could also be in basis, include, and exclude groups.
         // We must check the duplicate checker to see if the grouping is already in the combined list.
-        for (Grouping grouping:ownerships) {
+        for (Grouping grouping : ownerships) {
             // If they are not in the duplicate checker list, add the grouping to the combined list and the respective
             // MembershipAssignment attributes.
-            if (!duplicateChecker.contains(grouping.getPath())){
+            if (!duplicateChecker.contains(grouping.getPath())) {
                 combinedGroupings.add(grouping);
-                membershipAssignment.addInBasis(grouping.getPath(), memberAttributeService.isMember(grouping.getPath() + ":basis", uid));
-                membershipAssignment.addInInclude(grouping.getPath(), memberAttributeService.isMember(grouping.getPath() + ":include", uid));
-                membershipAssignment.addInExclude(grouping.getPath(), memberAttributeService.isMember(grouping.getPath() + ":exclude", uid));
+                membershipAssignment.addInBasis(grouping.getPath(),
+                        memberAttributeService.isMember(grouping.getPath() + ":basis", uid));
+                membershipAssignment.addInInclude(grouping.getPath(),
+                        memberAttributeService.isMember(grouping.getPath() + ":include", uid));
+                membershipAssignment.addInExclude(grouping.getPath(),
+                        memberAttributeService.isMember(grouping.getPath() + ":exclude", uid));
             }
 
             // Update the owner attribute for all groupings in the ownerships list.
@@ -593,15 +600,14 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
                     continue;
                 }
                 for (WsSubject subject : subjects) {
-                    if (subject == null) {
-                        continue;
+                    if (null != subject) {
+                        Person personToAdd = makePerson(subject, attributeNames);
+                        if (group.getPath().endsWith(BASIS) && subject.getSourceId() != null
+                                && subject.getSourceId().equals(STALE_SUBJECT_ID)) {
+                            personToAdd.setUsername("User Not Available.");
+                        }
+                        group.addMember(personToAdd);
                     }
-                    Person personToAdd = makePerson(subject, attributeNames);
-                    if (group.getPath().endsWith(BASIS) && subject.getSourceId() != null
-                            && subject.getSourceId().equals(STALE_SUBJECT_ID)) {
-                        personToAdd.setUsername("User Not Available.");
-                    }
-                    group.addMember(personToAdd);
                 }
                 groups.put(group.getPath(), group);
             }
