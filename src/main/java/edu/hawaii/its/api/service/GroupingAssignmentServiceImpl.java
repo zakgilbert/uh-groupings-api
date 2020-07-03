@@ -578,14 +578,20 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
 
         Map<String, Group> groupMembers = new HashMap<>();
         if (members.getResults() != null) {
-
             groupMembers = makeGroups(members);
         }
 
         return groupMembers;
     }
 
-    //makes a group filled with members from membersResults
+    //
+
+    /**
+     * Make a group filled with members from membersResult.
+     *
+     * @param membersResults
+     * @return
+     */
     @Override
     public Map<String, Group> makeGroups(WsGetMembersResults membersResults) {
         Map<String, Group> groups = new HashMap<>();
@@ -612,7 +618,6 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
                 groups.put(group.getPath(), group);
             }
         }
-        // Return empty group if for any unforeseen results.
         return groups;
     }
 
