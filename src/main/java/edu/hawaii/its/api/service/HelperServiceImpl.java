@@ -11,7 +11,6 @@ import edu.hawaii.its.api.type.Person;
 import edu.internet2.middleware.grouperClient.ws.beans.ResultMetadataHolder;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssign;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGetGrouperPrivilegesLiteResult;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembershipsResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
@@ -300,7 +299,8 @@ public class HelperServiceImpl implements HelperService {
     /**
      * Get the name of a grouping from groupPath.
      */
-    @Override public String nameGroupingPath(String groupPath) {
+    @Override
+    public String nameGroupingPath(String groupPath) {
         String parentPath = parentGroupingPath(groupPath);
         if ("".equals(parentPath)) {
             return "";
@@ -308,10 +308,9 @@ public class HelperServiceImpl implements HelperService {
         return parentPath.substring(parentPath.lastIndexOf(":") + 1, parentPath.length());
     }
 
-    @Override public GenericServiceResult swaggerToString(String currentUser, String path) {
-        WsSubjectLookup wsSubjectLookup = grouperFS.makeWsSubjectLookup(currentUser);
-        WsGetGrouperPrivilegesLiteResult result =
-                grouperFS.makeWsGetGrouperPrivilegesLiteResult(path, PRIVILEGE_OPT_IN, wsSubjectLookup);
+    @Override
+    public GenericServiceResult swaggerToString(String currentUser, String path) {
+        WsSubjectLookup result = grouperFS.makeWsSubjectLookup(currentUser);
         return new GenericServiceResult("result", result);
     }
 }
