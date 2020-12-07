@@ -198,6 +198,24 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
     }
 
     /**
+     * Similar to the getAllSyncDestination except it is called through getGrouping and thus doesn't check to see if
+     * person requesting the information is an owner or superuser as that has already been checked.
+     */
+    @Override
+    public List<SyncDestination> getSyncDestinations(Grouping grouping) {
+        List<SyncDestination> syncDestinations = getAllSyncDestinations();
+
+        if (syncDestinations == null) {
+            return null;
+        }
+        for (SyncDestination destination : syncDestinations) {
+            destination.setIsSynced(isGroupAttribute(grouping.getPath(), destination.getName()));
+            destination.setDescription(destination.parseKeyVal(grouping.getName(), destination.getDescription()));
+        }
+        return syncDestinations;
+    }
+
+    /**
      * Turn the ability for users to opt-in to a grouping on or off.
      */
     @Override
@@ -301,23 +319,6 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
         return false;
     }
 
-    /**
-     * Similar to the getAllSyncDestination except it is called through getGrouping and thus doesn't check to see if
-     * person requesting the information is an owner or superuser as that has already been checked.
-     */
-    @Override
-    public List<SyncDestination> getSyncDestinations(Grouping grouping) {
-        List<SyncDestination> syncDestinations = getAllSyncDestinations();
-
-        if (syncDestinations == null) {
-            return null;
-        }
-        for (SyncDestination destination : syncDestinations) {
-            destination.setIsSynced(isGroupAttribute(grouping.getPath(), destination.getName()));
-            destination.setDescription(destination.parseKeyVal(grouping.getName(), destination.getDescription()));
-        }
-        return syncDestinations;
-    }
 
     // Checks to see if a group has an attribute of a specific type and returns the list if it does.
     @Override
