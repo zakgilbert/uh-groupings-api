@@ -11,9 +11,11 @@ public class AddMemberResult {
     private String result;
     private String userIdentifier;
 
+    // Constructor
     public AddMemberResult() {
     }
 
+    // Constructor
     public AddMemberResult(boolean userWasAdded, boolean userWasRemoved, String pathOfAdd, String pathOfRemoved,
             String name, String uhUuid, String uid, String result, String userIdentifier) {
         this.userWasAdded = userWasAdded;
@@ -27,6 +29,7 @@ public class AddMemberResult {
         this.userIdentifier = userIdentifier;
     }
 
+    // Constructor
     public AddMemberResult(String userIdentifier, String result) {
         this.result = result;
         this.userIdentifier = userIdentifier;
